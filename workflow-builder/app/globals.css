@@ -340,3 +340,14 @@ a {
 .workflow-viewer-error {
   color: #c00;
 }
+
+/* Node Selection Styles */
+.step-node.selected {
+  border-color: #ff0000;
+  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+}
+
+.react-flow__node.selected .step-node {
+  border-color: #ff0000;
+  box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.2);
+}

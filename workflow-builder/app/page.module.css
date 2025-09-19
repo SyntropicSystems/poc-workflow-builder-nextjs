@@ -13,7 +13,7 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 400px 1fr 400px;
   gap: 20px;
   margin-top: 20px;
   height: calc(100vh - 200px);
@@ -30,4 +30,23 @@
 .canvas {
   min-width: 0;
   height: 100%;
+}
+
+.inspector {
+  min-width: 0;
+  overflow-y: auto;
+}
+
+/* Add responsive behavior */
+@media (max-width: 1400px) {
+  .layout {
+    grid-template-columns: 350px 1fr 350px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 300px 1fr 300px;
+    gap: 15px;
+  }
 }

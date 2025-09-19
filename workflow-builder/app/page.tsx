@@ -2,6 +2,7 @@ import { DirectorySelector } from '@/components/directory-selector';
 import { FileList } from '@/components/file-list';
 import { WorkflowLoader } from '@/components/workflow-loader';
 import { WorkflowViewer } from '@/components/workflow-viewer';
+import { StepInspector } from '@/components/step-inspector';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -17,6 +18,9 @@ export default function Home() {
           </div>
           <div className={styles.canvas}>
             <WorkflowViewer />
+          </div>
+          <div className={styles.inspector}>
+            <StepInspector />
           </div>
         </div>
       </div>
