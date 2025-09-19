@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package flowspec.v1;
+
+// Root workflow definition
+message Flow {
+  string schema = 1;
+  string id = 2;
+  string title = 3;
+  string owner = 4;
+  repeated string labels = 5;
+  Policy policy = 6;
+  Context context = 7;
+  map<string, Parameter> parameters = 8;
+  repeated Role roles = 9;
+  Artifacts artifacts = 10;
+  Events events = 11;
+  repeated Step steps = 12;
+}
+
+message Policy {
+  string enforcement = 1; // none, advice, guard, hard
+  bool tokens_required = 2;
+  bool events_required = 3;
+}
+
+message Context {
+  string domain = 1;
+  string brief = 2;
+  repeated string links = 3;
+}
+
+message Parameter {
+  string type = 1; // string, number, boolean, enum
+  bool required = 2;
+  string default_value = 3;
+  repeated string enum_values = 4;
+  string example = 5;
+}
+
+message Role {
+  string id = 1;
+  string kind = 2; // human, human_ai, ai, automation
+  string uid = 3;
+  string desc = 4;
+}
+
+message Artifacts {
+  repeated string inputs = 1;
+  repeated string outputs = 2;
+  repeated string scratch = 3;
+}
+
+message Events {
+  string stream = 1;
+  repeated string types = 2;
+}
+
+message Step {
+  string id = 1;
+  string title = 2;
+  string desc = 3;
+  string role = 4;
+  string when = 5;
+  Token token = 6;
+  repeated string instructions = 7;
+  Prompts prompts = 8;
+  Acceptance acceptance = 9;
+  repeated string emit_events = 10;
+  map<string, string> metrics = 11;
+  repeated NextStep next = 12;
+  int32 timeout_ms = 13;
+  int32 max_attempts = 14;
+}
+
+message Token {
+  bool advisory = 1;
+  TokenScope scope = 2;
+  TokenClaims claims = 3;
+}
+
+message TokenScope {
+  repeated string fs_read = 1;
+  repeated string fs_write = 2;
+  string net = 3;
+  repeated string exec = 4;
+  repeated string secrets = 5;
+  int32 lease_ms = 6;
+}
+
+message TokenClaims {
+  string aud = 1;
+  string sub = 2;
+  string nonce = 3;
+}
+
+message Prompts {
+  string system = 1;
+  string user = 2;
+  string notes = 3;
+}
+
+message Acceptance {
+  repeated Check checks = 1;
+}
+
+message Check {
+  string kind = 1;
+  string path = 2;
+  string file = 3;
+  repeated string keys = 4;
+  repeated string allowed = 5;
+  int32 min = 6;
+  string expr = 7;
+  string schema = 8;
+  string on_fail = 9;
+  string severity = 10;
+}
+
+message NextStep {
+  string to = 1;
+  string when = 2;
+}

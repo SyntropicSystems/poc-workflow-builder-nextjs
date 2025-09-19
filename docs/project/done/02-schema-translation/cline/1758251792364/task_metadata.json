@@ -1,0 +1,76 @@
+{
+  "files_in_context": [
+    {
+      "path": "docs/context/00-main.context.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758251792435,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "docs/project/done/01-project-init/01-project-init.task.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758251792442,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "docs/project/in-progress/02-schema-translation.task.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758251792452,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/scripts/install-protobuf.py",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251808718,
+      "cline_edit_date": 1758251808718,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/schemas/flowspec.v1.proto",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251840946,
+      "cline_edit_date": 1758251840946,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/scripts/generate-proto.py",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251866469,
+      "cline_edit_date": 1758251866469,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/generated/types.test.ts",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251892304,
+      "cline_edit_date": 1758251892304,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/scripts/verify-schema.py",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251909049,
+      "cline_edit_date": 1758251909049,
+      "user_edit_date": null
+    }
+  ],
+  "model_usage": [
+    {
+      "ts": 1758251792397,
+      "model_id": "claude-opus-4-1-20250805",
+      "model_provider_id": "anthropic",
+      "mode": "act"
+    }
+  ]
+}
