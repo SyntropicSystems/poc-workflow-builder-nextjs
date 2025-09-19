@@ -11,17 +11,23 @@
   width: 100%;
 }
 
-.columns {
+.layout {
   display: grid;
   grid-template-columns: 400px 1fr;
   gap: 20px;
   margin-top: 20px;
+  height: calc(100vh - 200px);
+  min-height: 600px;
 }
 
 .sidebar {
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
 }
 
-.content {
+.canvas {
   min-width: 0;
+  height: 100%;
 }

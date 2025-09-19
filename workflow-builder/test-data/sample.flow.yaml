@@ -1,14 +1,269 @@
 schema: flowspec.v1
-id: test.sample.v1
-title: Test Sample
+id: software-development.workflow.v1
+title: Software Development Workflow
+owner: development-team
 policy:
-  enforcement: advice
+  enforcement: guard
 steps:
-  - id: step_one
+  - id: requirement_analysis
+    title: Requirement Analysis
     role: human
     instructions:
-      - Do this
+      - Analyze the feature requirements document
+      - Identify key user stories and acceptance criteria
+      - Estimate complexity and effort required
+      - Create initial technical design notes
     acceptance:
       checks:
-        - kind: file_exists
-          path: /test
+        - description: Requirements document reviewed and understood
+        - description: User stories documented with acceptance criteria
+        - description: Technical complexity assessed
+    next:
+      - to: technical_design
+        when: requirements_approved
+      - to: requirement_clarification
+        when: requirements_unclear
+
+  - id: requirement_clarification
+    title: Requirement Clarification
+    role: human
+    instructions:
+      - Schedule meeting with stakeholders
+      - Document unclear requirements and questions
+      - Obtain clarification on ambiguous points
+    acceptance:
+      checks:
+        - description: All questions answered
+        - description: Requirements updated with clarifications
+    next:
+      - to: requirement_analysis
+
+  - id: technical_design
+    title: Technical Design
+    role: ai
+    instructions:
+      - Create detailed technical architecture
+      - Design database schema changes if needed
+      - Plan API endpoints and data structures
+      - Consider security implications
+      - Document integration points
+    acceptance:
+      checks:
+        - description: Architecture diagram created
+        - description: Database changes documented
+        - description: API specification written
+        - description: Security review completed
+    token:
+      scope:
+        repositories: write
+        issues: write
+    next:
+      - to: design_review
+
+  - id: design_review
+    title: Design Review
+    role: human
+    instructions:
+      - Review technical design document
+      - Validate approach against requirements
+      - Check for potential scalability issues
+      - Ensure security best practices
+    acceptance:
+      checks:
+        - description: Design approved by senior developer
+        - description: No major architectural concerns raised
+        - description: Security review passed
+    next:
+      - to: implementation
+        when: design_approved
+      - to: technical_design
+        when: design_needs_revision
+
+  - id: implementation
+    title: Code Implementation
+    role: ai
+    instructions:
+      - Implement the feature according to technical design
+      - Write comprehensive unit tests
+      - Follow coding standards and best practices
+      - Add proper error handling and logging
+      - Update documentation
+    acceptance:
+      checks:
+        - description: All required functionality implemented
+        - description: Unit tests written with >90% coverage
+        - description: Code follows style guidelines
+        - description: Error handling implemented
+        - description: Documentation updated
+    token:
+      scope:
+        repositories: write
+        pull_requests: write
+
+  - id: code_review
+    title: Code Review
+    role: human
+    instructions:
+      - Review all code changes thoroughly
+      - Check for potential bugs and edge cases
+      - Verify test coverage is adequate
+      - Ensure code follows team standards
+      - Validate security considerations
+    acceptance:
+      checks:
+        - description: Code logic reviewed and approved
+        - description: Test coverage verified
+        - description: No security vulnerabilities found
+        - description: Performance impact assessed
+    next:
+      - to: testing
+        when: code_approved
+      - to: implementation
+        when: changes_requested
+
+  - id: testing
+    title: Quality Assurance Testing
+    role: human
+    instructions:
+      - Execute comprehensive test plan
+      - Test happy path and edge cases
+      - Verify integration with existing features
+      - Performance testing if applicable
+      - Document any bugs found
+    acceptance:
+      checks:
+        - description: All test cases executed
+        - description: No critical bugs found
+        - description: Performance meets requirements
+        - description: Integration tests passed
+    next:
+      - to: deployment_staging
+        when: all_tests_passed
+      - to: bug_fixes
+        when: bugs_found
+
+  - id: bug_fixes
+    title: Bug Fixes
+    role: ai
+    instructions:
+      - Analyze and fix reported bugs
+      - Add additional tests for bug scenarios
+      - Verify fixes don't introduce regressions
+    acceptance:
+      checks:
+        - description: All bugs fixed
+        - description: Regression tests added
+        - description: No new issues introduced
+    token:
+      scope:
+        repositories: write
+    next:
+      - to: testing
+
+  - id: deployment_staging
+    title: Staging Deployment
+    role: system
+    instructions:
+      - Deploy to staging environment
+      - Run automated deployment tests
+      - Verify application starts successfully
+      - Check all integrations work
+    acceptance:
+      checks:
+        - description: Deployment completed successfully
+        - description: Application health checks pass
+        - description: Integration endpoints responding
+    token:
+      scope:
+        deployments: write
+        environments: staging
+    next:
+      - to: user_acceptance_testing
+
+  - id: user_acceptance_testing
+    title: User Acceptance Testing
+    role: human
+    instructions:
+      - Conduct UAT with key stakeholders
+      - Validate feature meets original requirements
+      - Gather feedback on user experience
+      - Document any final adjustments needed
+    acceptance:
+      checks:
+        - description: Stakeholders approve feature
+        - description: User experience validated
+        - description: No major usability issues
+    next:
+      - to: production_deployment
+        when: uat_approved
+      - to: final_adjustments
+        when: minor_changes_needed
+
+  - id: final_adjustments
+    title: Final Adjustments
+    role: ai
+    instructions:
+      - Make minor UI/UX improvements
+      - Adjust based on UAT feedback
+      - Update help documentation
+    acceptance:
+      checks:
+        - description: All feedback addressed
+        - description: Documentation updated
+    token:
+      scope:
+        repositories: write
+    next:
+      - to: user_acceptance_testing
+
+  - id: production_deployment
+    title: Production Deployment
+    role: system
+    instructions:
+      - Deploy to production environment
+      - Monitor deployment process
+      - Run post-deployment health checks
+      - Enable feature flags if applicable
+    acceptance:
+      checks:
+        - description: Production deployment successful
+        - description: All health checks passing
+        - description: Feature flags configured
+        - description: Monitoring alerts active
+    token:
+      scope:
+        deployments: write
+        environments: production
+    next:
+      - to: post_deployment_monitoring
+
+  - id: post_deployment_monitoring
+    title: Post-Deployment Monitoring
+    role: human
+    instructions:
+      - Monitor application performance
+      - Watch for error rates and user issues
+      - Gather initial user feedback
+      - Document any immediate concerns
+    acceptance:
+      checks:
+        - description: No critical issues detected
+        - description: Performance within expected ranges
+        - description: User feedback generally positive
+    next:
+      - to: workflow_completion
+
+  - id: workflow_completion
+    title: Workflow Completion
+    role: human
+    instructions:
+      - Document lessons learned
+      - Update team processes based on experience
+      - Archive workflow artifacts
+      - Celebrate successful delivery
+    acceptance:
+      checks:
+        - description: Retrospective completed
+        - description: Process improvements documented
+        - description: Artifacts archived
+        - description: Team recognized for good work

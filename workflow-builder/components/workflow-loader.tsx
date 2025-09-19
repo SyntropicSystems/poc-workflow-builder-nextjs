@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useFileSystemStore } from '@/lib/state/filesystem.store';
+import { useWorkflowStore } from '@/lib/state/workflow.store';
 import { loadWorkflow } from '@/lib/workflow-core';
-import type { Flow, ValidationError } from '@/lib/workflow-core';
 
 export function WorkflowLoader() {
   const { selectedFile, fileContent } = useFileSystemStore();
-  const [workflow, setWorkflow] = useState<Flow | null>(null);
-  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+  const { setWorkflow, clearWorkflow, currentWorkflow, validationErrors } = useWorkflowStore();
   const [parseError, setParseError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,8 +15,7 @@ export function WorkflowLoader() {
     if (fileContent && selectedFile) {
       parseWorkflow();
     } else {
-      setWorkflow(null);
-      setValidationErrors([]);
+      clearWorkflow();
       setParseError(null);
     }
   }, [fileContent, selectedFile]);
@@ -27,18 +25,16 @@ export function WorkflowLoader() {
 
     setIsLoading(true);
     setParseError(null);
-    setValidationErrors([]);
 
     const result = await loadWorkflow(fileContent);
 
     if (result.success) {
-      setWorkflow(result.data);
       // Also run validation to get warnings
       const { validateWorkflow } = await import('@/lib/workflow-core');
       const errors = await validateWorkflow(result.data);
-      setValidationErrors(errors.filter(e => e.severity === 'warning'));
+      setWorkflow(result.data, errors);
     } else {
-      setWorkflow(null);
+      clearWorkflow();
       setParseError(result.error.message);
     }
 
@@ -64,23 +60,23 @@ export function WorkflowLoader() {
         </div>
       )}
 
-      {workflow && (
+      {currentWorkflow && (
         <div className="workflow-info">
           <h4>✅ Valid Workflow</h4>
           <dl>
             <dt>ID:</dt>
-            <dd>{workflow.id}</dd>
+            <dd>{currentWorkflow.id}</dd>
             <dt>Title:</dt>
-            <dd>{workflow.title}</dd>
+            <dd>{currentWorkflow.title}</dd>
             <dt>Steps:</dt>
-            <dd>{workflow.steps?.length || 0}</dd>
+            <dd>{currentWorkflow.steps?.length || 0}</dd>
             <dt>Policy:</dt>
-            <dd>{workflow.policy?.enforcement || 'none'}</dd>
+            <dd>{currentWorkflow.policy?.enforcement || 'none'}</dd>
           </dl>
         </div>
       )}
 
-      {validationErrors.length > 0 && (
+      {validationErrors.filter(e => e.severity === 'warning').length > 0 && (
         <div className="validation-warnings">
           <h4>⚠️ Warnings</h4>
           <ul>
