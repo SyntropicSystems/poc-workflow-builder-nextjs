@@ -38,11 +38,8 @@ describe('Core API Shape', () => {
     expect(api.createWorkflowFromTemplate.length).toBe(2) // id + title
   })
   
-  it('should throw not implemented errors', async () => {
-    // await expect(api.loadWorkflow('test')).rejects.toThrow('Not implemented') // Implemented in Phase 1
-    // await expect(api.saveWorkflow({} as Flow)).rejects.toThrow('Not implemented') // Implemented in Phase 1
-    // await expect(api.validateWorkflow({} as Flow)).rejects.toThrow('Not implemented') // Implemented in Phase 1
-    
+  it('should throw not implemented errors for edit functions', () => {
+    // Only test the functions still not implemented
     expect(() => api.updateStep({} as Flow, 'id', {})).toThrow('Not implemented')
     expect(() => api.addStep({} as Flow, {} as Step)).toThrow('Not implemented')
     expect(() => api.removeStep({} as Flow, 'id')).toThrow('Not implemented')

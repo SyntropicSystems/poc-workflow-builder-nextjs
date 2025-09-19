@@ -1,0 +1,14 @@
+schema: flowspec.v1
+id: test.sample.v1
+title: Test Sample
+policy:
+  enforcement: advice
+steps:
+  - id: step_one
+    role: human
+    instructions:
+      - Do this
+    acceptance:
+      checks:
+        - kind: file_exists
+          path: /test

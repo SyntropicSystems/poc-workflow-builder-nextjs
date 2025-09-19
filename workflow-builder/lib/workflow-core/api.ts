@@ -1,41 +1,95 @@
 import type { Flow, Step } from './generated'
 import type { Result, ValidationError, WorkflowOptions } from './types'
+import { parseYAML, isValidFlowObject } from './parser'
+import { validateFlow } from './validator'
+import * as yaml from 'js-yaml'
 
 /**
  * Parse and validate a YAML string into a Flow object
- * @param yamlString - Raw YAML content from file
- * @param options - Parsing options
- * @returns Validated Flow object or error
  */
 export async function loadWorkflow(
   yamlString: string,
   options: WorkflowOptions = {}
 ): Promise<Result<Flow>> {
-  throw new Error('Not implemented: loadWorkflow')
+  try {
+    // Parse YAML
+    const parsed = parseYAML(yamlString);
+    
+    // Basic structure check
+    if (!isValidFlowObject(parsed)) {
+      return {
+        success: false,
+        error: new Error('Invalid workflow structure: missing required fields')
+      };
+    }
+
+    // Validate against schema
+    const errors = validateFlow(parsed);
+    
+    // In strict mode, warnings become errors
+    const criticalErrors = options.strict 
+      ? errors 
+      : errors.filter(e => e.severity === 'error');
+
+    if (criticalErrors.length > 0) {
+      const errorMessage = criticalErrors
+        .map(e => `${e.path}: ${e.message}`)
+        .join('\n');
+      return {
+        success: false,
+        error: new Error(`Validation failed:\n${errorMessage}`)
+      };
+    }
+
+    // Convert to Flow type (for now, just cast - in real implementation would properly construct)
+    const flow = parsed as unknown as Flow;
+
+    return {
+      success: true,
+      data: flow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Unknown error')
+    };
+  }
 }
 
 /**
  * Serialize a Flow object back to YAML string
- * @param workflow - Flow object to serialize
- * @returns YAML string representation
  */
 export async function saveWorkflow(
   workflow: Flow
 ): Promise<Result<string>> {
-  throw new Error('Not implemented: saveWorkflow')
+  try {
+    const yamlString = yaml.dump(workflow, {
+      indent: 2,
+      lineWidth: -1,
+      noRefs: true,
+      sortKeys: false
+    });
+
+    return {
+      success: true,
+      data: yamlString
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to serialize workflow')
+    };
+  }
 }
 
 /**
  * Validate a Flow object against schema rules
- * @param workflow - Flow object to validate
- * @param options - Validation options
- * @returns Array of validation errors (empty if valid)
  */
 export async function validateWorkflow(
   workflow: Flow,
   options: WorkflowOptions = {}
 ): Promise<ValidationError[]> {
-  throw new Error('Not implemented: validateWorkflow')
+  return validateFlow(workflow);
 }
 
 /**
