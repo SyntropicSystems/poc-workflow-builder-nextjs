@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+import json
+from pathlib import Path
+
+
+def generate_mapping_guide():
+    """Generate a guide showing how TypeScript patterns map to Rust"""
+    
+    mappings = {
+        'types': {
+            'string': 'String or &str',
+            'number': 'i32, i64, f64, etc.',
+            'boolean': 'bool',
+            'any': 'AVOID - use specific type',
+            'unknown': 'AVOID - use specific type',
+            'void': '()',
+            'null | undefined': 'Option<T>',
+            'T | Error': 'Result<T, Error>',
+            'T[]': 'Vec<T>',
+            'Map<K,V>': 'HashMap<K,V>',
+            'Set<T>': 'HashSet<T>',
+            'Promise<T>': 'Future<Output = T>'
+        },
+        'patterns': {
+            'try { } catch { }': 'match result { Ok() => {}, Err() => {} }',
+            'throw new Error()': 'return Err(Error::new())',
+            'if (x === null)': 'if let None = x',
+            'x?.y?.z': 'x.and_then(|x| x.y).and_then(|y| y.z)',
+            '...spread': 'explicit cloning or field-by-field',
+            'async/await': 'async/.await (or remove if not needed)',
+            'JSON.parse()': 'serde_json::from_str()',
+            'JSON.stringify()': 'serde_json::to_string()'
+        },
+        'api_functions': {
+            'loadWorkflow(yaml: string): Result<Flow>': 
+                'fn load_workflow(yaml: &str) -> Result<Flow, Error>',
+            'saveWorkflow(flow: Flow): Result<string>':
+                'fn save_workflow(flow: &Flow) -> Result<String, Error>',
+            'validateWorkflow(flow: Flow): ValidationError[]':
+                'fn validate_workflow(flow: &Flow) -> Vec<ValidationError>',
+            'addStep(flow: Flow, step: Step): Result<Flow>':
+                'fn add_step(flow: Flow, step: Step) -> Result<Flow, Error>'
+        }
+    }
+    
+    # Save as JSON
+    output_dir = Path('reports')
+    output_dir.mkdir(exist_ok=True)
+    
+    with open(output_dir / 'typescript-to-rust-mapping.json', 'w') as f:
+        json.dump(mappings, f, indent=2)
+    
+    # Create markdown guide
+    with open(output_dir / 'typescript-to-rust-guide.md', 'w') as f:
+        f.write("# TypeScript to Rust Migration Guide\n\n")
+        
+        f.write("## Type Mappings\n\n")
+        f.write("| TypeScript | Rust |\n")
+        f.write("|------------|------|\n")
+        for ts, rust in mappings['types'].items():
+            f.write(f"| `{ts}` | `{rust}` |\n")
+        
+        f.write("\n## Pattern Mappings\n\n")
+        f.write("| TypeScript Pattern | Rust Pattern |\n")
+        f.write("|-------------------|-------------|\n")
+        for ts, rust in mappings['patterns'].items():
+            f.write(f"| `{ts}` | `{rust}` |\n")
+        
+        f.write("\n## API Function Signatures\n\n")
+        f.write("### TypeScript\n```typescript\n")
+        for ts in mappings['api_functions'].keys():
+            f.write(f"{ts}\n")
+        f.write("```\n\n### Rust\n```rust\n")
+        for rust in mappings['api_functions'].values():
+            f.write(f"{rust}\n")
+        f.write("```\n")
+    
+    print("✅ Generated TypeScript to Rust mapping guide")
+
+if __name__ == "__main__":
+    generate_mapping_guide()

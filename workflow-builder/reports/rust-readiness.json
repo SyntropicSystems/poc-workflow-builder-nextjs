@@ -1,0 +1,56 @@
+{
+  "ready_for_rust": false,
+  "compatibility": {
+    "error_handling": false,
+    "data_structures": true,
+    "no_dynamic_typing": false,
+    "pure_functions": true,
+    "clear_ownership": false
+  },
+  "issues": [
+    "Missing Result<T> type (Rust pattern)",
+    "Throwing errors instead of returning Result",
+    "Mutating parameters: e.severity, e.severity, s.id",
+    "Uses 'any' type in templates.ts"
+  ],
+  "warnings": [
+    "Heavy use of optional chaining (11)",
+    "Uses spread operator 3 times (needs explicit cloning in Rust)",
+    "Has 3 async functions (consider sync for core logic)",
+    "Mentions cycles/circular refs (complex in Rust)",
+    "Many type assertions in api.ts: 7",
+    "Uses 'unknown' type in parser.ts",
+    "Many type assertions in validator.ts: 12",
+    "Uses 'unknown' type in validator.ts"
+  ],
+  "recommendations": [
+    "Good: Using deep cloning (maps to Rust's Clone trait)"
+  ],
+  "migration_plan": [
+    {
+      "task": "Refactor error handling",
+      "description": "Convert all functions to return Result<T>",
+      "rust_equivalent": "Result<T, Error>",
+      "priority": "HIGH"
+    },
+    {
+      "task": "Remove dynamic typing",
+      "description": "Replace all \"any\" with specific types",
+      "rust_equivalent": "Strong static types",
+      "priority": "HIGH"
+    },
+    {
+      "task": "Clarify ownership",
+      "description": "Use immutable data, explicit cloning",
+      "rust_equivalent": "Ownership and borrowing rules",
+      "priority": "MEDIUM"
+    },
+    {
+      "task": "Replace spread operators",
+      "description": "Use explicit cloning/copying",
+      "rust_equivalent": "Clone trait or explicit field copying",
+      "priority": "LOW"
+    }
+  ],
+  "estimated_effort": "MEDIUM - Some refactoring needed"
+}
