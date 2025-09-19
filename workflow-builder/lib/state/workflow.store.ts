@@ -9,7 +9,10 @@ import {
 import { 
   addStep as addStepAPI,
   removeStep as removeStepAPI,
-  duplicateStep as duplicateStepAPI
+  duplicateStep as duplicateStepAPI,
+  addEdge as addEdgeAPI,
+  updateEdge as updateEdgeAPI,
+  removeEdge as removeEdgeAPI
 } from '@/lib/workflow-core/api';
 import { generateStepId } from '@/lib/workflow-core/templates';
 
@@ -33,6 +36,9 @@ interface WorkflowState {
   addStep: (step: Step, position?: number) => void;
   removeStep: (stepId: string) => void;
   duplicateStep: (stepId: string) => void;
+  addEdge: (sourceStepId: string, targetStepId: string, condition: string) => void;
+  updateEdge: (sourceStepId: string, edgeIndex: number, newCondition: string, newTargetId?: string) => void;
+  removeEdge: (sourceStepId: string, edgeIndex: number) => void;
 }
 
 export const useWorkflowStore = create<WorkflowState>((set, get) => ({
@@ -169,6 +175,72 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
       state.selectStep(newId);
     } else if (!result.success) {
       console.error('Failed to duplicate step:', result.error);
+    }
+  },
+
+  addEdge: async (sourceStepId, targetStepId, condition) => {
+    const state = get();
+    if (!state.currentWorkflow) return;
+    
+    const result = addEdgeAPI(state.currentWorkflow, sourceStepId, targetStepId, condition);
+    
+    if (result.success && result.data) {
+      const validation = await validateWorkflow(result.data);
+      state.updateWorkflow(result.data, validation);
+      
+      // Update selected step reference if it's the source step
+      if (state.selectedStepId === sourceStepId) {
+        const updatedStep = result.data.steps?.find(s => s.id === sourceStepId);
+        if (updatedStep) {
+          set({ selectedStep: updatedStep });
+        }
+      }
+    } else if (!result.success) {
+      console.error('Failed to add edge:', result.error);
+    }
+  },
+  
+  updateEdge: async (sourceStepId, edgeIndex, newCondition, newTargetId) => {
+    const state = get();
+    if (!state.currentWorkflow) return;
+    
+    const result = updateEdgeAPI(state.currentWorkflow, sourceStepId, edgeIndex, newCondition, newTargetId);
+    
+    if (result.success && result.data) {
+      const validation = await validateWorkflow(result.data);
+      state.updateWorkflow(result.data, validation);
+      
+      // Update selected step reference if it's the source step
+      if (state.selectedStepId === sourceStepId) {
+        const updatedStep = result.data.steps?.find(s => s.id === sourceStepId);
+        if (updatedStep) {
+          set({ selectedStep: updatedStep });
+        }
+      }
+    } else if (!result.success) {
+      console.error('Failed to update edge:', result.error);
+    }
+  },
+  
+  removeEdge: async (sourceStepId, edgeIndex) => {
+    const state = get();
+    if (!state.currentWorkflow) return;
+    
+    const result = removeEdgeAPI(state.currentWorkflow, sourceStepId, edgeIndex);
+    
+    if (result.success && result.data) {
+      const validation = await validateWorkflow(result.data);
+      state.updateWorkflow(result.data, validation);
+      
+      // Update selected step reference if it's the source step
+      if (state.selectedStepId === sourceStepId) {
+        const updatedStep = result.data.steps?.find(s => s.id === sourceStepId);
+        if (updatedStep) {
+          set({ selectedStep: updatedStep });
+        }
+      }
+    } else if (!result.success) {
+      console.error('Failed to remove edge:', result.error);
     }
   }
 }));

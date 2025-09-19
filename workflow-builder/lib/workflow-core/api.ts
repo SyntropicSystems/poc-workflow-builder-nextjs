@@ -332,6 +332,267 @@ export function duplicateStep(
 }
 
 /**
+ * Add a new edge between two steps
+ * @param workflow - Current workflow
+ * @param sourceStepId - ID of source step
+ * @param targetStepId - ID of target step
+ * @param condition - When condition for the edge
+ * @returns New workflow with added edge
+ */
+export function addEdge(
+  workflow: Flow,
+  sourceStepId: string,
+  targetStepId: string,
+  condition: string
+): Result<Flow> {
+  try {
+    // Validate both steps exist
+    const sourceStep = workflow.steps?.find(s => s.id === sourceStepId);
+    const targetStep = workflow.steps?.find(s => s.id === targetStepId);
+    
+    if (!sourceStep) {
+      return {
+        success: false,
+        error: new Error(`Source step "${sourceStepId}" not found`)
+      };
+    }
+    
+    if (!targetStep) {
+      return {
+        success: false,
+        error: new Error(`Target step "${targetStepId}" not found`)
+      };
+    }
+    
+    // Validate condition format (lowercase with underscores)
+    const conditionPattern = /^[a-z][a-z0-9_]*$/;
+    if (!conditionPattern.test(condition)) {
+      return {
+        success: false,
+        error: new Error('Condition must be lowercase with underscores only')
+      };
+    }
+    
+    // Check for circular dependency
+    if (wouldCreateCycle(workflow, sourceStepId, targetStepId)) {
+      return {
+        success: false,
+        error: new Error('This connection would create a circular dependency')
+      };
+    }
+    
+    const updatedWorkflow: Flow = JSON.parse(JSON.stringify(workflow));
+    const updatedStep = updatedWorkflow.steps!.find(s => s.id === sourceStepId)!;
+    
+    if (!updatedStep.next) {
+      updatedStep.next = [];
+    }
+    
+    // Check if condition already exists for this step
+    if (updatedStep.next.some(n => n.when === condition)) {
+      return {
+        success: false,
+        error: new Error(`Condition "${condition}" already exists for this step`)
+      };
+    }
+    
+    updatedStep.next.push({ to: targetStepId, when: condition });
+    
+    return {
+      success: true,
+      data: updatedWorkflow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to add edge')
+    };
+  }
+}
+
+/**
+ * Update an existing edge
+ * @param workflow - Current workflow
+ * @param sourceStepId - ID of source step
+ * @param edgeIndex - Index of edge in next array
+ * @param newCondition - New condition name
+ * @param newTargetId - New target step ID (optional)
+ * @returns New workflow with updated edge
+ */
+export function updateEdge(
+  workflow: Flow,
+  sourceStepId: string,
+  edgeIndex: number,
+  newCondition: string,
+  newTargetId?: string
+): Result<Flow> {
+  try {
+    const sourceStep = workflow.steps?.find(s => s.id === sourceStepId);
+    
+    if (!sourceStep || !sourceStep.next) {
+      return {
+        success: false,
+        error: new Error(`Source step "${sourceStepId}" not found or has no edges`)
+      };
+    }
+    
+    if (edgeIndex < 0 || edgeIndex >= sourceStep.next.length) {
+      return {
+        success: false,
+        error: new Error(`Edge index ${edgeIndex} out of bounds`)
+      };
+    }
+    
+    // If updating target, validate it exists
+    if (newTargetId && !workflow.steps?.find(s => s.id === newTargetId)) {
+      return {
+        success: false,
+        error: new Error(`Target step "${newTargetId}" not found`)
+      };
+    }
+    
+    // Validate new condition format
+    const conditionPattern = /^[a-z][a-z0-9_]*$/;
+    if (!conditionPattern.test(newCondition)) {
+      return {
+        success: false,
+        error: new Error('Condition must be lowercase with underscores only')
+      };
+    }
+    
+    const updatedWorkflow: Flow = JSON.parse(JSON.stringify(workflow));
+    const updatedStep = updatedWorkflow.steps!.find(s => s.id === sourceStepId)!;
+    
+    const currentEdge = updatedStep.next![edgeIndex];
+    const targetId = newTargetId || currentEdge.to;
+    
+    // Check for condition conflicts (excluding current edge)
+    const otherEdges = updatedStep.next!.filter((_, i) => i !== edgeIndex);
+    if (otherEdges.some(edge => edge.when === newCondition)) {
+      return {
+        success: false,
+        error: new Error(`Condition "${newCondition}" already exists for this step`)
+      };
+    }
+    
+    // Check for circular dependency if target changed
+    if (newTargetId && newTargetId !== currentEdge.to) {
+      if (wouldCreateCycle(workflow, sourceStepId, newTargetId)) {
+        return {
+          success: false,
+          error: new Error('This connection would create a circular dependency')
+        };
+      }
+    }
+    
+    updatedStep.next![edgeIndex] = { to: targetId, when: newCondition };
+    
+    return {
+      success: true,
+      data: updatedWorkflow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to update edge')
+    };
+  }
+}
+
+/**
+ * Remove an edge from a step
+ * @param workflow - Current workflow
+ * @param sourceStepId - ID of source step
+ * @param edgeIndex - Index of edge to remove
+ * @returns New workflow without the edge
+ */
+export function removeEdge(
+  workflow: Flow,
+  sourceStepId: string,
+  edgeIndex: number
+): Result<Flow> {
+  try {
+    const sourceStep = workflow.steps?.find(s => s.id === sourceStepId);
+    
+    if (!sourceStep || !sourceStep.next) {
+      return {
+        success: false,
+        error: new Error(`Source step "${sourceStepId}" not found or has no edges`)
+      };
+    }
+    
+    if (edgeIndex < 0 || edgeIndex >= sourceStep.next.length) {
+      return {
+        success: false,
+        error: new Error(`Edge index ${edgeIndex} out of bounds`)
+      };
+    }
+    
+    const updatedWorkflow: Flow = JSON.parse(JSON.stringify(workflow));
+    const updatedStep = updatedWorkflow.steps!.find(s => s.id === sourceStepId)!;
+    
+    updatedStep.next!.splice(edgeIndex, 1);
+    
+    // If no edges remain, remove the next array entirely
+    if (updatedStep.next!.length === 0) {
+      delete updatedStep.next;
+    }
+    
+    return {
+      success: true,
+      data: updatedWorkflow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to remove edge')
+    };
+  }
+}
+
+/**
+ * Helper function to detect if adding an edge would create a cycle
+ * @param workflow - Current workflow
+ * @param sourceId - Source step ID
+ * @param targetId - Target step ID
+ * @returns True if cycle would be created
+ */
+function wouldCreateCycle(
+  workflow: Flow,
+  sourceId: string,
+  targetId: string
+): boolean {
+  // Simple DFS to check if targetId can reach sourceId
+  const visited = new Set<string>();
+  const stack = [targetId];
+  
+  while (stack.length > 0) {
+    const current = stack.pop()!;
+    
+    if (current === sourceId) {
+      return true; // Found cycle
+    }
+    
+    if (visited.has(current)) {
+      continue;
+    }
+    
+    visited.add(current);
+    
+    const step = workflow.steps?.find(s => s.id === current);
+    if (step?.next) {
+      for (const nextStep of step.next) {
+        if (nextStep.to && !visited.has(nextStep.to)) {
+          stack.push(nextStep.to);
+        }
+      }
+    }
+  }
+  
+  return false;
+}
+
+/**
  * Create a new workflow from a minimal template
  * @param id - Workflow ID (e.g., "domain.name.v1")
  * @param title - Human-readable title

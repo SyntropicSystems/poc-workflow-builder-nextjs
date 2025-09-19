@@ -13,7 +13,7 @@ import ReactFlow, {
   ConnectionMode
 } from 'reactflow';
 import { StepNode } from './step-node';
-import { convertFlowToNodes } from '@/lib/workflow-core/flow-to-nodes';
+import { flowToReactFlow } from '@/lib/workflow-core/flow-to-nodes';
 import { useWorkflowStore } from '@/lib/state/workflow.store';
 import type { Flow } from '@/lib/workflow-core';
 
@@ -31,7 +31,7 @@ export function WorkflowGraph({ workflow, readonly = true }: WorkflowGraphProps)
   
   // Convert workflow to nodes and edges
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
-    () => convertFlowToNodes(workflow),
+    () => flowToReactFlow(workflow),
     [workflow]
   );
 

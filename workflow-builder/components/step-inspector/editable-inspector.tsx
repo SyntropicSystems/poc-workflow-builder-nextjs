@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useWorkflowStore } from '@/lib/state/workflow.store';
 import type { Step } from '@/lib/workflow-core';
+import { EdgeEditor } from '@/components/edge-editor';
 import styles from './step-inspector.module.css';
 
 export function EditableStepInspector() {
@@ -297,20 +298,10 @@ export function EditableStepInspector() {
           </div>
         )}
 
-        {/* Next Steps */}
-        {selectedStep.next && selectedStep.next.length > 0 && (
-          <div className={styles.section}>
-            <h4>Next Steps</h4>
-            <ul className={styles.nextList}>
-              {selectedStep.next.map((next, index) => (
-                <li key={index}>
-                  → {next.to}
-                  {next.when && <span className={styles.condition}> (when: {next.when})</span>}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {/* Edge Editor - Replaces read-only Next Steps */}
+        <div className={styles.section}>
+          <EdgeEditor step={selectedStep} />
+        </div>
       </div>
     </div>
   );

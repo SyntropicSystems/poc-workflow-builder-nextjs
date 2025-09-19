@@ -36,7 +36,6 @@ steps:
         - description: Requirements updated with clarifications
     next:
       - to: requirement_analysis
-    desc: abcdef
   - id: technical_design
     title: Technical Design
     role: ai

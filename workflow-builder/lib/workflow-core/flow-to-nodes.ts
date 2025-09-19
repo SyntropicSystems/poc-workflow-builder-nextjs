@@ -8,7 +8,7 @@ export interface StepNodeData {
   checkCount: number;
 }
 
-export function convertFlowToNodes(workflow: Flow): { nodes: Node[]; edges: Edge[] } {
+export function flowToReactFlow(workflow: Flow): { nodes: Node[]; edges: Edge[] } {
   if (!workflow.steps || workflow.steps.length === 0) {
     return { nodes: [], edges: [] };
   }
