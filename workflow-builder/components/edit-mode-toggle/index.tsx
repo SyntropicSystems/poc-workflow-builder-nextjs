@@ -4,7 +4,7 @@ import { useWorkflowStore } from '@/lib/state/workflow.store';
 import styles from './edit-mode.module.css';
 
 export function EditModeToggle() {
-  const { editMode, setEditMode, currentWorkflow, hasUnsavedChanges } = useWorkflowStore();
+  const { editMode, setEditMode, currentWorkflow, isDirty } = useWorkflowStore();
 
   if (!currentWorkflow) {
     return null;
@@ -23,7 +23,7 @@ export function EditModeToggle() {
           {editMode ? 'Edit Mode' : 'View Mode'}
         </span>
       </label>
-      {hasUnsavedChanges && (
+      {isDirty && (
         <span className={styles.unsaved}>Unsaved changes</span>
       )}
     </div>

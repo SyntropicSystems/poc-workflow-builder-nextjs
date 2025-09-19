@@ -6,14 +6,16 @@ import { updateStep as updateStepAPI, validateWorkflow } from '@/lib/workflow-co
 
 interface WorkflowState {
   currentWorkflow: Flow | null;
+  originalWorkflow: Flow | null; // Track original for comparison
   validationErrors: ValidationError[];
   isValid: boolean;
   selectedStepId: string | null;
   selectedStep: Step | null;
   editMode: boolean;
-  hasUnsavedChanges: boolean;
+  isDirty: boolean; // Track if changes were made
   
   setWorkflow: (workflow: Flow | null, errors?: ValidationError[]) => void;
+  updateWorkflow: (workflow: Flow, errors?: ValidationError[]) => void;
   clearWorkflow: () => void;
   selectStep: (stepId: string | null) => void;
   setEditMode: (enabled: boolean) => void;
@@ -23,28 +25,43 @@ interface WorkflowState {
 
 export const useWorkflowStore = create<WorkflowState>((set, get) => ({
   currentWorkflow: null,
+  originalWorkflow: null,
   validationErrors: [],
   isValid: false,
   selectedStepId: null,
   selectedStep: null,
   editMode: false,
-  hasUnsavedChanges: false,
+  isDirty: false,
   
   setWorkflow: (workflow, errors = []) => set({
     currentWorkflow: workflow,
+    originalWorkflow: workflow ? JSON.parse(JSON.stringify(workflow)) : null,
     validationErrors: errors,
     isValid: workflow !== null && errors.filter(e => e.severity === 'error').length === 0,
-    hasUnsavedChanges: false
+    isDirty: false
   }),
+  
+  updateWorkflow: (workflow, errors = []) => {
+    const state = get();
+    const isDirty = JSON.stringify(workflow) !== JSON.stringify(state.originalWorkflow);
+    
+    set({
+      currentWorkflow: workflow,
+      validationErrors: errors,
+      isValid: errors.filter(e => e.severity === 'error').length === 0,
+      isDirty
+    });
+  },
   
   clearWorkflow: () => set({
     currentWorkflow: null,
+    originalWorkflow: null,
     validationErrors: [],
     isValid: false,
     selectedStepId: null,
     selectedStep: null,
     editMode: false,
-    hasUnsavedChanges: false
+    isDirty: false
   }),
   
   selectStep: (stepId) => {
@@ -71,13 +88,8 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
       // Validate the updated workflow
       const errors = await validateWorkflow(result.data);
       
-      // Update state with new workflow
-      set({
-        currentWorkflow: result.data,
-        validationErrors: errors,
-        isValid: errors.filter(e => e.severity === 'error').length === 0,
-        hasUnsavedChanges: true
-      });
+      // Update workflow using updateWorkflow to properly track isDirty
+      state.updateWorkflow(result.data, errors);
       
       // Update selected step reference
       const updatedStep = result.data.steps?.find(s => s.id === state.selectedStepId);
@@ -87,5 +99,12 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
     }
   },
   
-  markAsSaved: () => set({ hasUnsavedChanges: false })
+  markAsSaved: () => {
+    const state = get();
+    set({
+      originalWorkflow: state.currentWorkflow ? 
+        JSON.parse(JSON.stringify(state.currentWorkflow)) : null,
+      isDirty: false
+    });
+  }
 }));

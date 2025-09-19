@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+}
+
+.saveButton {
+  padding: 8px 16px;
+  background: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: #0051cc;
+}
+
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.unsavedIndicator {
+  color: #ff6b6b;
+  font-size: 16px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.lastSaved {
+  font-size: 12px;
+  color: #666;
+}
+
+.error {
+  color: #ff0000;
+  font-size: 12px;
+  padding: 4px 8px;
+  background: #ffebeb;
+  border-radius: 4px;
+}

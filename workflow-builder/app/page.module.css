@@ -11,12 +11,20 @@
   width: 100%;
 }
 
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 400px 1fr 400px;
   gap: 20px;
-  margin-top: 20px;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 250px);
   min-height: 600px;
 }
 

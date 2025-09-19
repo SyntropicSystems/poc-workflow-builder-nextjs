@@ -63,13 +63,29 @@ export async function saveWorkflow(
   workflow: Flow
 ): Promise<Result<string>> {
   try {
-    const yamlString = yaml.dump(workflow, {
-      indent: 2,
-      lineWidth: -1,
-      noRefs: true,
-      sortKeys: false
-    });
+    // Validate before saving
+    const validation = await validateWorkflow(workflow);
+    const hasErrors = validation.filter(e => e.severity === 'error').length > 0;
+    
+    if (hasErrors) {
+      return {
+        success: false,
+        error: new Error('Cannot save invalid workflow. Fix validation errors first.')
+      };
+    }
 
+    // Clean up the workflow object before serialization
+    // Remove any undefined or null values that shouldn't be in YAML
+    const cleanWorkflow = JSON.parse(JSON.stringify(workflow));
+    
+    // Convert to YAML with proper formatting
+    const yamlString = yaml.dump(cleanWorkflow, {
+      indent: 2,
+      lineWidth: -1, // Don't wrap lines
+      noRefs: true,  // Don't use YAML references
+      sortKeys: false // Preserve key order
+    });
+    
     return {
       success: true,
       data: yamlString

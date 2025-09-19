@@ -23,7 +23,6 @@ steps:
         when: requirements_approved
       - to: requirement_clarification
         when: requirements_unclear
-
   - id: requirement_clarification
     title: Requirement Clarification
     role: human
@@ -37,7 +36,7 @@ steps:
         - description: Requirements updated with clarifications
     next:
       - to: requirement_analysis
-
+    desc: abcdef
   - id: technical_design
     title: Technical Design
     role: ai
@@ -59,7 +58,6 @@ steps:
         issues: write
     next:
       - to: design_review
-
   - id: design_review
     title: Design Review
     role: human
@@ -78,7 +76,6 @@ steps:
         when: design_approved
       - to: technical_design
         when: design_needs_revision
-
   - id: implementation
     title: Code Implementation
     role: ai
@@ -99,7 +96,6 @@ steps:
       scope:
         repositories: write
         pull_requests: write
-
   - id: code_review
     title: Code Review
     role: human
@@ -120,7 +116,6 @@ steps:
         when: code_approved
       - to: implementation
         when: changes_requested
-
   - id: testing
     title: Quality Assurance Testing
     role: human
@@ -141,7 +136,6 @@ steps:
         when: all_tests_passed
       - to: bug_fixes
         when: bugs_found
-
   - id: bug_fixes
     title: Bug Fixes
     role: ai
@@ -159,7 +153,6 @@ steps:
         repositories: write
     next:
       - to: testing
-
   - id: deployment_staging
     title: Staging Deployment
     role: system
@@ -179,7 +172,6 @@ steps:
         environments: staging
     next:
       - to: user_acceptance_testing
-
   - id: user_acceptance_testing
     title: User Acceptance Testing
     role: human
@@ -198,7 +190,6 @@ steps:
         when: uat_approved
       - to: final_adjustments
         when: minor_changes_needed
-
   - id: final_adjustments
     title: Final Adjustments
     role: ai
@@ -215,7 +206,6 @@ steps:
         repositories: write
     next:
       - to: user_acceptance_testing
-
   - id: production_deployment
     title: Production Deployment
     role: system
@@ -236,7 +226,6 @@ steps:
         environments: production
     next:
       - to: post_deployment_monitoring
-
   - id: post_deployment_monitoring
     title: Post-Deployment Monitoring
     role: human
@@ -252,7 +241,6 @@ steps:
         - description: User feedback generally positive
     next:
       - to: workflow_completion
-
   - id: workflow_completion
     title: Workflow Completion
     role: human

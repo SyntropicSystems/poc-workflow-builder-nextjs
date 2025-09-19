@@ -50,7 +50,7 @@ export function FileList() {
     
     try {
       const content = await readFileContent(file.handle);
-      selectFile(file, content);
+      selectFile(file, content, file.handle);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to read file');
     }

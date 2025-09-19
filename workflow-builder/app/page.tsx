@@ -4,6 +4,7 @@ import { WorkflowLoader } from '@/components/workflow-loader';
 import { WorkflowViewer } from '@/components/workflow-viewer';
 import { StepInspector } from '@/components/step-inspector';
 import { EditModeToggle } from '@/components/edit-mode-toggle';
+import { SaveButton } from '@/components/save-button';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -12,7 +13,10 @@ export default function Home() {
       <div className={styles.container}>
         <h1>Workflow Builder</h1>
         <DirectorySelector />
-        <EditModeToggle />
+        <div className={styles.toolbar}>
+          <EditModeToggle />
+          <SaveButton />
+        </div>
         <div className={styles.layout}>
           <div className={styles.sidebar}>
             <FileList />
