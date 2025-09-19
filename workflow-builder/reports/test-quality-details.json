@@ -1,0 +1,197 @@
+{
+  "average_quality": 56.25,
+  "files": [
+    {
+      "file": "lib/workflow-core/api.steps.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": true,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": true
+      },
+      "score": 5,
+      "max_score": 8,
+      "percentage": 62.5
+    },
+    {
+      "file": "lib/workflow-core/api.save.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": true,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": true
+      },
+      "score": 5,
+      "max_score": 8,
+      "percentage": 62.5
+    },
+    {
+      "file": "lib/workflow-core/index.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": false,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": false
+      },
+      "score": 3,
+      "max_score": 8,
+      "percentage": 37.5
+    },
+    {
+      "file": "lib/workflow-core/history-manager.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": true,
+        "tests_error_cases": false,
+        "has_setup_teardown": true,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": true
+      },
+      "score": 6,
+      "max_score": 8,
+      "percentage": 75.0
+    },
+    {
+      "file": "lib/workflow-core/api.edges.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": true,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": false
+      },
+      "score": 4,
+      "max_score": 8,
+      "percentage": 50.0
+    },
+    {
+      "file": "lib/workflow-core/api.shape.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": false,
+        "tests_error_cases": true,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": false
+      },
+      "score": 4,
+      "max_score": 8,
+      "percentage": 50.0
+    },
+    {
+      "file": "lib/workflow-core/validator.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": true,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": false
+      },
+      "score": 4,
+      "max_score": 8,
+      "percentage": 50.0
+    },
+    {
+      "file": "lib/workflow-core/flow-to-nodes.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": true,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": true
+      },
+      "score": 5,
+      "max_score": 8,
+      "percentage": 62.5
+    },
+    {
+      "file": "lib/workflow-core/api.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": true,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": false
+      },
+      "score": 4,
+      "max_score": 8,
+      "percentage": 50.0
+    },
+    {
+      "file": "lib/fs/browser-fs.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": true,
+        "tests_error_cases": true,
+        "has_setup_teardown": false,
+        "uses_mocks": true,
+        "good_test_names": true,
+        "tests_edge_cases": false
+      },
+      "score": 6,
+      "max_score": 8,
+      "percentage": 75.0
+    },
+    {
+      "file": "lib/fs/file-discovery.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": false,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": true,
+        "good_test_names": true,
+        "tests_edge_cases": false
+      },
+      "score": 4,
+      "max_score": 8,
+      "percentage": 50.0
+    },
+    {
+      "file": "lib/workflow-core/generated/types.test.ts",
+      "metrics": {
+        "has_describes": true,
+        "has_assertions": true,
+        "tests_success_cases": false,
+        "tests_error_cases": false,
+        "has_setup_teardown": false,
+        "uses_mocks": false,
+        "good_test_names": true,
+        "tests_edge_cases": true
+      },
+      "score": 4,
+      "max_score": 8,
+      "percentage": 50.0
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "summary": {
+    "good_coverage": false,
+    "coverage_percentage": 0.0,
+    "total_functions": 8,
+    "tested_functions": 0,
+    "test_files": 12,
+    "total_tests": 95
+  },
+  "untested_functions": [
+    "removeStep",
+    "createWorkflowFromTemplate",
+    "updateStep",
+    "addStep",
+    "addEdge",
+    "duplicateStep",
+    "updateEdge",
+    "removeEdge"
+  ],
+  "test_patterns": {
+    "result_pattern_tests": false,
+    "error_case_tests": true,
+    "validation_tests": true,
+    "edge_case_tests": true,
+    "integration_tests": false
+  },
+  "test_files": [
+    {
+      "file": "lib/workflow-core/api.steps.test.ts",
+      "tests": 19
+    },
+    {
+      "file": "lib/workflow-core/api.save.test.ts",
+      "tests": 9
+    },
+    {
+      "file": "lib/workflow-core/index.test.ts",
+      "tests": 1
+    },
+    {
+      "file": "lib/workflow-core/history-manager.test.ts",
+      "tests": 20
+    },
+    {
+      "file": "lib/workflow-core/api.edges.test.ts",
+      "tests": 18
+    },
+    {
+      "file": "lib/workflow-core/api.shape.test.ts",
+      "tests": 8
+    },
+    {
+      "file": "lib/workflow-core/validator.test.ts",
+      "tests": 4
+    },
+    {
+      "file": "lib/workflow-core/flow-to-nodes.test.ts",
+      "tests": 7
+    },
+    {
+      "file": "lib/workflow-core/api.test.ts",
+      "tests": 1
+    },
+    {
+      "file": "lib/fs/browser-fs.test.ts",
+      "tests": 3
+    },
+    {
+      "file": "lib/fs/file-discovery.test.ts",
+      "tests": 3
+    },
+    {
+      "file": "lib/workflow-core/generated/types.test.ts",
+      "tests": 2
+    }
+  ],
+  "recommendations": [
+    "CRITICAL: Increase test coverage from 0.0% to at least 80%",
+    "Add tests for: removeStep, createWorkflowFromTemplate, updateStep, addStep, addEdge",
+    "Add integration tests for complete workflows"
+  ]
+}
