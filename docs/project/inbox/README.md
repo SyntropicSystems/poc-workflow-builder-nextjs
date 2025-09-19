@@ -1,0 +1,1 @@
+Folder for tasks that need to be processed to create a proper plan to be ready for implementation
