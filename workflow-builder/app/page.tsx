@@ -6,6 +6,7 @@ import { StepInspector } from '@/components/step-inspector';
 import { StepActions } from '@/components/step-actions';
 import { EditModeToggle } from '@/components/edit-mode-toggle';
 import { SaveButton } from '@/components/save-button';
+import { UndoRedoControls } from '@/components/undo-redo';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <DirectorySelector />
         <div className={styles.toolbar}>
           <EditModeToggle />
+          <UndoRedoControls />
           <SaveButton />
         </div>
         <div className={styles.layout}>
