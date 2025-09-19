@@ -171,7 +171,16 @@ export function addStep(
     if (!step.id || !step.role || !step.instructions || !step.acceptance) {
       return {
         success: false,
-        error: new Error('Step missing required fields')
+        error: new Error('Step missing required fields: id, role, instructions, acceptance')
+      };
+    }
+
+    // Validate step ID format
+    const idPattern = /^[a-z][a-z0-9_]*$/;
+    if (!idPattern.test(step.id)) {
+      return {
+        success: false,
+        error: new Error('Step ID must be lowercase with underscores only')
       };
     }
 
@@ -189,6 +198,7 @@ export function addStep(
       updatedWorkflow.steps = [];
     }
 
+    // Insert at position or append
     if (position !== undefined && position >= 0 && position <= updatedWorkflow.steps.length) {
       updatedWorkflow.steps.splice(position, 0, step);
     } else {
@@ -218,9 +228,16 @@ export function removeStep(
   stepId: string
 ): Result<Flow> {
   try {
-    const stepIndex = workflow.steps?.findIndex(s => s.id === stepId);
+    if (!workflow.steps) {
+      return {
+        success: false,
+        error: new Error('Workflow has no steps')
+      };
+    }
+
+    const stepIndex = workflow.steps.findIndex(s => s.id === stepId);
     
-    if (stepIndex === undefined || stepIndex === -1) {
+    if (stepIndex === -1) {
       return {
         success: false,
         error: new Error(`Step with ID "${stepId}" not found`)
@@ -230,14 +247,17 @@ export function removeStep(
     const updatedWorkflow: Flow = JSON.parse(JSON.stringify(workflow));
     
     // Remove the step
-    updatedWorkflow.steps?.splice(stepIndex, 1);
+    updatedWorkflow.steps!.splice(stepIndex, 1);
 
-    // Clean up references in other steps' next arrays
-    updatedWorkflow.steps?.forEach(step => {
-      if (step.next) {
-        step.next = step.next.filter(n => n.to !== stepId);
-      }
-    });
+    // Clean up references to this step in other steps' next conditions
+    if (updatedWorkflow.steps) {
+      updatedWorkflow.steps.forEach(step => {
+        if (step.next) {
+          // Filter out any next conditions that point to the removed step
+          step.next = step.next.filter(n => n.to !== stepId);
+        }
+      });
+    }
 
     return {
       success: true,
@@ -247,6 +267,66 @@ export function removeStep(
     return {
       success: false,
       error: error instanceof Error ? error : new Error('Failed to remove step')
+    };
+  }
+}
+
+/**
+ * Duplicate a step in the workflow
+ * @param workflow - Current workflow
+ * @param stepId - ID of step to duplicate
+ * @param newId - New ID for the duplicated step
+ * @returns New workflow with duplicated step
+ */
+export function duplicateStep(
+  workflow: Flow,
+  stepId: string,
+  newId: string
+): Result<Flow> {
+  try {
+    const step = workflow.steps?.find(s => s.id === stepId);
+    
+    if (!step) {
+      return {
+        success: false,
+        error: new Error(`Step with ID "${stepId}" not found`)
+      };
+    }
+
+    // Validate new ID format
+    const idPattern = /^[a-z][a-z0-9_]*$/;
+    if (!idPattern.test(newId)) {
+      return {
+        success: false,
+        error: new Error('Step ID must be lowercase with underscores only')
+      };
+    }
+
+    // Check for duplicate ID
+    if (workflow.steps?.some(s => s.id === newId)) {
+      return {
+        success: false,
+        error: new Error(`Step with ID "${newId}" already exists`)
+      };
+    }
+
+    // Create a copy with new ID
+    const duplicatedStep: Step = {
+      ...JSON.parse(JSON.stringify(step)),
+      id: newId,
+      title: `${step.title || step.id} (Copy)`
+    };
+
+    // Remove next conditions from the duplicate to avoid circular references
+    delete duplicatedStep.next;
+
+    // Add the duplicated step after the original
+    const originalIndex = workflow.steps!.findIndex(s => s.id === stepId);
+    return addStep(workflow, duplicatedStep, originalIndex + 1);
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to duplicate step')
     };
   }
 }

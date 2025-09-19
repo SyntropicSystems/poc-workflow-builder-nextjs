@@ -3,6 +3,7 @@ import { FileList } from '@/components/file-list';
 import { WorkflowLoader } from '@/components/workflow-loader';
 import { WorkflowViewer } from '@/components/workflow-viewer';
 import { StepInspector } from '@/components/step-inspector';
+import { StepActions } from '@/components/step-actions';
 import { EditModeToggle } from '@/components/edit-mode-toggle';
 import { SaveButton } from '@/components/save-button';
 import styles from './page.module.css';
@@ -26,6 +27,7 @@ export default function Home() {
             <WorkflowViewer />
           </div>
           <div className={styles.inspector}>
+            <StepActions />
             <StepInspector />
           </div>
         </div>

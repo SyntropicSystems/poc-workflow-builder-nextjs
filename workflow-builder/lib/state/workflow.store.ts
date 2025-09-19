@@ -2,7 +2,16 @@
 
 import { create } from 'zustand';
 import type { Flow, Step, ValidationError } from '@/lib/workflow-core';
-import { updateStep as updateStepAPI, validateWorkflow } from '@/lib/workflow-core';
+import { 
+  updateStep as updateStepAPI, 
+  validateWorkflow
+} from '@/lib/workflow-core';
+import { 
+  addStep as addStepAPI,
+  removeStep as removeStepAPI,
+  duplicateStep as duplicateStepAPI
+} from '@/lib/workflow-core/api';
+import { generateStepId } from '@/lib/workflow-core/templates';
 
 interface WorkflowState {
   currentWorkflow: Flow | null;
@@ -21,6 +30,9 @@ interface WorkflowState {
   setEditMode: (enabled: boolean) => void;
   updateSelectedStep: (updates: Partial<Step>) => Promise<void>;
   markAsSaved: () => void;
+  addStep: (step: Step, position?: number) => void;
+  removeStep: (stepId: string) => void;
+  duplicateStep: (stepId: string) => void;
 }
 
 export const useWorkflowStore = create<WorkflowState>((set, get) => ({
@@ -106,5 +118,57 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
         JSON.parse(JSON.stringify(state.currentWorkflow)) : null,
       isDirty: false
     });
+  },
+
+  addStep: async (step, position) => {
+    const state = get();
+    if (!state.currentWorkflow) return;
+    
+    const result = addStepAPI(state.currentWorkflow, step, position);
+    
+    if (result.success && result.data) {
+      const validation = await validateWorkflow(result.data);
+      state.updateWorkflow(result.data, validation);
+    } else if (!result.success) {
+      console.error('Failed to add step:', result.error);
+    }
+  },
+  
+  removeStep: async (stepId) => {
+    const state = get();
+    if (!state.currentWorkflow) return;
+    
+    // Deselect if removing selected step
+    if (state.selectedStepId === stepId) {
+      state.selectStep(null);
+    }
+    
+    const result = removeStepAPI(state.currentWorkflow, stepId);
+    
+    if (result.success && result.data) {
+      const validation = await validateWorkflow(result.data);
+      state.updateWorkflow(result.data, validation);
+    } else if (!result.success) {
+      console.error('Failed to remove step:', result.error);
+    }
+  },
+  
+  duplicateStep: async (stepId) => {
+    const state = get();
+    if (!state.currentWorkflow) return;
+    
+    const existingIds = state.currentWorkflow.steps?.map(s => s.id).filter(id => id != null) as string[] || [];
+    const newId = generateStepId(stepId, existingIds);
+    
+    const result = duplicateStepAPI(state.currentWorkflow, stepId, newId);
+    
+    if (result.success && result.data) {
+      const validation = await validateWorkflow(result.data);
+      state.updateWorkflow(result.data, validation);
+      // Select the new step
+      state.selectStep(newId);
+    } else if (!result.success) {
+      console.error('Failed to duplicate step:', result.error);
+    }
   }
 }));
