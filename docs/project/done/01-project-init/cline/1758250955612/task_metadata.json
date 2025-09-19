@@ -1,0 +1,130 @@
+{
+  "files_in_context": [
+    {
+      "path": "docs/context/00-main.context.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758250955697,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "docs/project/staged/01-project-init.task.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758250955709,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "README.md",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758250961614,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/scripts/install-deps.py",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251096338,
+      "cline_edit_date": 1758251096338,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/tsconfig.json",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251136617,
+      "cline_edit_date": 1758251136617,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/vitest.config.ts",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251148549,
+      "cline_edit_date": 1758251148549,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/test-setup.ts",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251157716,
+      "cline_edit_date": 1758251157716,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.test.ts",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251166272,
+      "cline_edit_date": 1758251166272,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/package.json",
+      "record_state": "stale",
+      "record_source": "read_tool",
+      "cline_read_date": 1758251169385,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/package.json",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251179742,
+      "cline_edit_date": 1758251179742,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/scripts/verify-setup.py",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758251196254,
+      "cline_edit_date": 1758251196254,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/package.json",
+      "record_state": "stale",
+      "record_source": "user_edited",
+      "cline_read_date": 1758251179742,
+      "cline_edit_date": 1758251179742,
+      "user_edit_date": 1758251214533
+    },
+    {
+      "path": "workflow-builder/package.json",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758251224330,
+      "cline_edit_date": 1758251179742,
+      "user_edit_date": 1758251214533
+    },
+    {
+      "path": "workflow-builder/tsconfig.json",
+      "record_state": "active",
+      "record_source": "user_edited",
+      "cline_read_date": 1758251136617,
+      "cline_edit_date": 1758251136617,
+      "user_edit_date": 1758251316176
+    }
+  ],
+  "model_usage": [
+    {
+      "ts": 1758250955663,
+      "model_id": "claude-opus-4-1-20250805",
+      "model_provider_id": "anthropic",
+      "mode": "plan"
+    },
+    {
+      "ts": 1758251005479,
+      "model_id": "claude-opus-4-1-20250805",
+      "model_provider_id": "anthropic",
+      "mode": "act"
+    }
+  ]
+}
