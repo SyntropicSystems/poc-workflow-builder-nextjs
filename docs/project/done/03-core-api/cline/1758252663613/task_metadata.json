@@ -1,0 +1,154 @@
+{
+  "files_in_context": [
+    {
+      "path": "docs/context/00-main.context.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758252663679,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "docs/project/done/02-schema-translation/02-schema-translation.task.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758252663685,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "docs/project/in-progress/03-core-api.task.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758252663691,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/generated/index.ts",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758252690130,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.test.ts",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758252700494,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/types.ts",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758252941343,
+      "cline_edit_date": 1758252941343,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.ts",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758252962862,
+      "cline_edit_date": 1758252962862,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/index.ts",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758252972533,
+      "cline_edit_date": 1758252972533,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.shape.test.ts",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758252992914,
+      "cline_edit_date": 1758252992914,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/index.test.ts",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758253003051,
+      "cline_edit_date": 1758253003051,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/index.test.ts",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758253016284,
+      "cline_edit_date": 1758253016284,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/index.test.ts",
+      "record_state": "active",
+      "record_source": "user_edited",
+      "cline_read_date": 1758253016284,
+      "cline_edit_date": 1758253016284,
+      "user_edit_date": 1758253017876
+    },
+    {
+      "path": "workflow-builder/scripts/verify-api.py",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758253041423,
+      "cline_edit_date": 1758253041423,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.shape.test.ts",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758253240533,
+      "cline_edit_date": 1758253240533,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.shape.test.ts",
+      "record_state": "stale",
+      "record_source": "user_edited",
+      "cline_read_date": 1758253240533,
+      "cline_edit_date": 1758253240533,
+      "user_edit_date": 1758253242116
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.shape.test.ts",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758253253547,
+      "cline_edit_date": 1758253253547,
+      "user_edit_date": 1758253242116
+    },
+    {
+      "path": "workflow-builder/scripts/verify-api.py",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758253368865,
+      "cline_edit_date": 1758253368865,
+      "user_edit_date": null
+    }
+  ],
+  "model_usage": [
+    {
+      "ts": 1758252663644,
+      "model_id": "claude-sonnet-4-20250514:1m",
+      "model_provider_id": "anthropic",
+      "mode": "plan"
+    },
+    {
+      "ts": 1758252928843,
+      "model_id": "claude-sonnet-4-20250514:1m",
+      "model_provider_id": "anthropic",
+      "mode": "act"
+    }
+  ]
+}
