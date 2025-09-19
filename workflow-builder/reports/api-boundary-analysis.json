@@ -1,0 +1,78 @@
+{
+  "summary": {
+    "api_functions_count": 8,
+    "ui_components_analyzed": 1,
+    "stores_analyzed": 2,
+    "violations_found": 1,
+    "warnings_count": 0
+  },
+  "api_functions": [
+    "addEdge",
+    "addStep",
+    "createWorkflowFromTemplate",
+    "duplicateStep",
+    "removeEdge",
+    "removeStep",
+    "updateEdge",
+    "updateStep"
+  ],
+  "violations": [
+    {
+      "file": "components/workflow-loader.tsx",
+      "issues": [
+        "Validation logic outside API"
+      ]
+    }
+  ],
+  "warnings": [
+    {
+      "type": "Components not using API",
+      "files": [
+        "components/directory-selector.tsx",
+        "components/workflow-viewer.tsx",
+        "components/workflow-loader.tsx",
+        "components/file-list.tsx",
+        "components/workflow-graph/index.tsx",
+        "components/workflow-graph/step-node.tsx",
+        "components/step-actions/index.tsx",
+        "components/edge-editor/index.tsx",
+        "components/undo-redo/index.tsx",
+        "components/edit-mode-toggle/index.tsx",
+        "components/add-step-modal/index.tsx",
+        "components/step-inspector/index.tsx",
+        "components/step-inspector/editable-inspector.tsx"
+      ]
+    }
+  ],
+  "ui_api_usage": [
+    {
+      "file": "components/save-button/index.tsx",
+      "uses_api": [
+        "saveWorkflow"
+      ]
+    }
+  ],
+  "store_api_usage": [
+    {
+      "file": "lib/state/filesystem.store.ts",
+      "uses_api": [],
+      "issues": []
+    },
+    {
+      "file": "lib/state/workflow.store.ts",
+      "uses_api": [
+        " \n  addStep as addStepAPI",
+        "\n  removeStep as removeStepAPI",
+        "\n  duplicateStep as duplicateStepAPI",
+        "\n  addEdge as addEdgeAPI",
+        "\n  updateEdge as updateEdgeAPI",
+        "\n  removeEdge as removeEdgeAPI\n"
+      ],
+      "issues": []
+    }
+  ],
+  "recommendations": [
+    "CRITICAL: Move all business logic to lib/workflow-core/api.ts",
+    "Missing expected API functions: saveWorkflow, loadWorkflow, validateWorkflow, createWorkflow"
+  ]
+}
