@@ -1,11 +1,18 @@
 'use client';
 
 import { useWorkflowStore } from '@/lib/state/workflow.store';
+import { EditableStepInspector } from './editable-inspector';
 import styles from './step-inspector.module.css';
 
 export function StepInspector() {
   const { selectedStep, selectedStepId, editMode } = useWorkflowStore();
+  
+  // Show editable inspector in edit mode, read-only otherwise
+  if (editMode) {
+    return <EditableStepInspector />;
+  }
 
+  // Read-only inspector
   if (!selectedStep) {
     return (
       <div className={styles.inspector}>

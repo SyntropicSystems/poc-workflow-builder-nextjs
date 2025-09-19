@@ -104,7 +104,38 @@ export function updateStep(
   stepId: string,
   updates: Partial<Step>
 ): Result<Flow> {
-  throw new Error('Not implemented: updateStep')
+  try {
+    const stepIndex = workflow.steps?.findIndex(s => s.id === stepId);
+    
+    if (stepIndex === undefined || stepIndex === -1) {
+      return {
+        success: false,
+        error: new Error(`Step with ID "${stepId}" not found`)
+      };
+    }
+
+    // Create a deep copy of the workflow
+    const updatedWorkflow: Flow = JSON.parse(JSON.stringify(workflow));
+    
+    // Apply updates to the step
+    if (updatedWorkflow.steps && updatedWorkflow.steps[stepIndex]) {
+      updatedWorkflow.steps[stepIndex] = {
+        ...updatedWorkflow.steps[stepIndex],
+        ...updates,
+        id: updatedWorkflow.steps[stepIndex].id // Prevent ID changes
+      };
+    }
+
+    return {
+      success: true,
+      data: updatedWorkflow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to update step')
+    };
+  }
 }
 
 /**
@@ -119,7 +150,45 @@ export function addStep(
   step: Step,
   position?: number
 ): Result<Flow> {
-  throw new Error('Not implemented: addStep')
+  try {
+    // Validate step has required fields
+    if (!step.id || !step.role || !step.instructions || !step.acceptance) {
+      return {
+        success: false,
+        error: new Error('Step missing required fields')
+      };
+    }
+
+    // Check for duplicate ID
+    if (workflow.steps?.some(s => s.id === step.id)) {
+      return {
+        success: false,
+        error: new Error(`Step with ID "${step.id}" already exists`)
+      };
+    }
+
+    const updatedWorkflow: Flow = JSON.parse(JSON.stringify(workflow));
+    
+    if (!updatedWorkflow.steps) {
+      updatedWorkflow.steps = [];
+    }
+
+    if (position !== undefined && position >= 0 && position <= updatedWorkflow.steps.length) {
+      updatedWorkflow.steps.splice(position, 0, step);
+    } else {
+      updatedWorkflow.steps.push(step);
+    }
+
+    return {
+      success: true,
+      data: updatedWorkflow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to add step')
+    };
+  }
 }
 
 /**
@@ -132,7 +201,38 @@ export function removeStep(
   workflow: Flow,
   stepId: string
 ): Result<Flow> {
-  throw new Error('Not implemented: removeStep')
+  try {
+    const stepIndex = workflow.steps?.findIndex(s => s.id === stepId);
+    
+    if (stepIndex === undefined || stepIndex === -1) {
+      return {
+        success: false,
+        error: new Error(`Step with ID "${stepId}" not found`)
+      };
+    }
+
+    const updatedWorkflow: Flow = JSON.parse(JSON.stringify(workflow));
+    
+    // Remove the step
+    updatedWorkflow.steps?.splice(stepIndex, 1);
+
+    // Clean up references in other steps' next arrays
+    updatedWorkflow.steps?.forEach(step => {
+      if (step.next) {
+        step.next = step.next.filter(n => n.to !== stepId);
+      }
+    });
+
+    return {
+      success: true,
+      data: updatedWorkflow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to remove step')
+    };
+  }
 }
 
 /**

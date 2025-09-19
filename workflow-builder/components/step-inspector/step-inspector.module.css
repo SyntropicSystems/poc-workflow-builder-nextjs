@@ -134,3 +134,158 @@
   font-style: italic;
   font-size: 12px;
 }
+
+/* Editor-specific styles */
+
+.errors {
+  background: #fee;
+  border: 1px solid #fcc;
+  padding: 10px 15px;
+  margin: 10px 20px;
+  border-radius: 4px;
+}
+
+.error {
+  color: #c00;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.error:last-child {
+  margin-bottom: 0;
+}
+
+.editableValue {
+  font-size: 14px;
+  color: #333;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  min-height: 36px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.editableValue:hover {
+  background: #e8e8e8;
+  border-color: #0070f3;
+}
+
+.editGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input,
+.select,
+.textarea {
+  flex: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #0070f3;
+}
+
+.saveBtn,
+.cancelBtn,
+.editBtn,
+.addBtn,
+.removeBtn {
+  padding: 6px 12px;
+  font-size: 13px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.saveBtn {
+  background: #0070f3;
+  color: white;
+}
+
+.saveBtn:hover {
+  background: #0051cc;
+}
+
+.cancelBtn {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.cancelBtn:hover {
+  background: #d0d0d0;
+}
+
+.editBtn {
+  background: transparent;
+  color: #0070f3;
+  padding: 4px 8px;
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.editBtn:hover {
+  background: #f0f0f0;
+}
+
+.addBtn {
+  background: #28a745;
+  color: white;
+}
+
+.addBtn:hover {
+  background: #218838;
+}
+
+.removeBtn {
+  background: #dc3545;
+  color: white;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.removeBtn:hover {
+  background: #c82333;
+}
+
+.instructionsEdit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.instructionItem {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.instructionActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.empty {
+  color: #999;
+  font-style: italic;
+}
