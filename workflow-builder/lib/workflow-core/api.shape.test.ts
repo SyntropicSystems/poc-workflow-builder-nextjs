@@ -39,9 +39,9 @@ describe('Core API Shape', () => {
   })
   
   it('should throw not implemented errors', async () => {
-    await expect(api.loadWorkflow('test')).rejects.toThrow('Not implemented')
-    await expect(api.saveWorkflow({} as Flow)).rejects.toThrow('Not implemented')
-    await expect(api.validateWorkflow({} as Flow)).rejects.toThrow('Not implemented')
+    // await expect(api.loadWorkflow('test')).rejects.toThrow('Not implemented') // Implemented in Phase 1
+    // await expect(api.saveWorkflow({} as Flow)).rejects.toThrow('Not implemented') // Implemented in Phase 1
+    // await expect(api.validateWorkflow({} as Flow)).rejects.toThrow('Not implemented') // Implemented in Phase 1
     
     expect(() => api.updateStep({} as Flow, 'id', {})).toThrow('Not implemented')
     expect(() => api.addStep({} as Flow, {} as Step)).toThrow('Not implemented')

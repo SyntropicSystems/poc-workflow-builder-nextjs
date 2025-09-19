@@ -1,0 +1,170 @@
+{
+  "files_in_context": [
+    {
+      "path": "docs/context/00-main.context.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758261352988,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "docs/project/in-progress/10-phase-fixes.task.md",
+      "record_state": "active",
+      "record_source": "file_mentioned",
+      "cline_read_date": 1758261352992,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/scripts/apply-phase-1-fixes.py",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758261367685,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/package.json",
+      "record_state": "stale",
+      "record_source": "read_tool",
+      "cline_read_date": 1758261394769,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/src/app/page.tsx",
+      "record_state": "stale",
+      "record_source": "read_tool",
+      "cline_read_date": 1758261407064,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/src/app/layout.tsx",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758261938920,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/src/app/page.tsx",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758261943830,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/src/app/globals.css",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758261950382,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/src/app/page.module.css",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758261956057,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/app/layout.tsx",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758261971363,
+      "cline_edit_date": 1758261971363,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/app/page.tsx",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758261993363,
+      "cline_edit_date": 1758261993363,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/app/globals.css",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758262005651,
+      "cline_edit_date": 1758262005651,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/app/page.module.css",
+      "record_state": "active",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758262034137,
+      "cline_edit_date": 1758262034137,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.shape.test.ts",
+      "record_state": "stale",
+      "record_source": "read_tool",
+      "cline_read_date": 1758262078848,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.shape.test.ts",
+      "record_state": "stale",
+      "record_source": "cline_edited",
+      "cline_read_date": 1758262096438,
+      "cline_edit_date": 1758262096438,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/lib/workflow-core/api.shape.test.ts",
+      "record_state": "active",
+      "record_source": "user_edited",
+      "cline_read_date": 1758262096438,
+      "cline_edit_date": 1758262096438,
+      "user_edit_date": 1758262098424
+    },
+    {
+      "path": "workflow-builder/package.json",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758262101431,
+      "cline_edit_date": null,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/app/page.tsx",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758262110164,
+      "cline_edit_date": 1758261993363,
+      "user_edit_date": null
+    },
+    {
+      "path": "workflow-builder/app/layout.tsx",
+      "record_state": "active",
+      "record_source": "read_tool",
+      "cline_read_date": 1758262115899,
+      "cline_edit_date": 1758261971363,
+      "user_edit_date": null
+    }
+  ],
+  "model_usage": [
+    {
+      "ts": 1758261352945,
+      "model_id": "claude-sonnet-4-20250514:1m",
+      "model_provider_id": "anthropic",
+      "mode": "plan"
+    },
+    {
+      "ts": 1758261925529,
+      "model_id": "claude-sonnet-4-20250514:1m",
+      "model_provider_id": "anthropic",
+      "mode": "act"
+    }
+  ]
+}
