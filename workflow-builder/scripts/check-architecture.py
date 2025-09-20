@@ -103,6 +103,17 @@ class ArchitectureChecker:
         """Verify API uses Result<T> pattern for error handling"""
         print("🔍 Checking Result pattern...")
         
+        # Check for Result type definition in types.ts
+        types_file = Path('lib/workflow-core/types.ts')
+        if types_file.exists():
+            types_content = types_file.read_text()
+            if 'type Result<T' not in types_content and 'interface Result<T' not in types_content:
+                self.issues.append("Result<T> type not defined in types.ts")
+                self.compliance['result_pattern'] = False
+        else:
+            self.issues.append("types.ts file not found")
+            self.compliance['result_pattern'] = False
+            
         api_file = Path('lib/workflow-core/api.ts')
         if not api_file.exists():
             self.issues.append("API file not found")
@@ -110,20 +121,26 @@ class ArchitectureChecker:
         
         content = api_file.read_text()
         
-        # Check for Result type definition
-        if not re.search(r'type Result<T>', content):
-            self.issues.append("Result<T> type not defined in API")
+        # Check that API imports Result type
+        if 'Result' not in content or 'from \'./types\'' not in content:
+            self.issues.append("API doesn't import Result type from types")
             self.compliance['result_pattern'] = False
         
-        # Check that functions return Result
-        functions = re.findall(r'export function (\w+).*?:\s*([^{]+)', content, re.DOTALL)
+        # Check that functions return Result - match async and regular functions
+        functions = re.findall(r'export\s+(?:async\s+)?function\s+(\w+).*?:\s*([^{]+)', content, re.DOTALL)
         
+        non_result_functions = []
         for func_name, return_type in functions:
-            if 'Result<' not in return_type and func_name not in ['validateWorkflowId', 'suggestWorkflowId']:
-                self.warnings.append(f"Function {func_name} doesn't return Result<T>")
+            # Clean up return type string
+            return_type = return_type.strip()
+            if 'Result<' not in return_type and func_name != 'wouldCreateCycle':
+                non_result_functions.append(func_name)
         
-        # Check for proper error handling
-        if '{ success: true' not in content or '{ success: false' not in content:
+        if non_result_functions:
+            self.warnings.append(f"Functions not returning Result<T>: {', '.join(non_result_functions)}")
+        
+        # Check for proper error handling patterns
+        if 'success: true' not in content or 'success: false' not in content:
             self.issues.append("API doesn't use Result pattern correctly")
             self.compliance['result_pattern'] = False
         
@@ -139,21 +156,33 @@ class ArchitectureChecker:
             self.issues.append("Core directory not found")
             return False
         
-        forbidden_imports = [
-            'react', 'next', 'use', 'useState', 'useEffect',
-            '@/components', '@/app'
-        ]
-        
         for ts_file in core_dir.rglob('*.ts'):
             if 'test' in str(ts_file):
                 continue
                 
             content = ts_file.read_text()
             
-            for forbidden in forbidden_imports:
-                if forbidden in content:
-                    self.issues.append(f"Core file {ts_file} has framework dependency: {forbidden}")
+            # Check for actual React imports
+            if re.search(r'from\s+[\'"]react[\'"]', content) or re.search(r'from\s+[\'"]react/', content):
+                self.issues.append(f"Core file {ts_file} imports React")
+                self.compliance['no_framework_deps'] = False
+            
+            # Check for actual Next.js imports  
+            if re.search(r'from\s+[\'"]next[\'"]', content) or re.search(r'from\s+[\'"]next/', content):
+                self.issues.append(f"Core file {ts_file} imports Next.js")
+                self.compliance['no_framework_deps'] = False
+            
+            # Check for React hooks (useXXX)
+            if re.search(r'\buse[A-Z]\w+\s*\(', content):
+                # Double check it's not just a regular function
+                if re.search(r'(useState|useEffect|useContext|useReducer|useCallback|useMemo|useRef)', content):
+                    self.issues.append(f"Core file {ts_file} uses React hooks")
                     self.compliance['no_framework_deps'] = False
+            
+            # Check for component/app imports
+            if re.search(r'from\s+[\'"]@/components', content) or re.search(r'from\s+[\'"]@/app', content):
+                self.issues.append(f"Core file {ts_file} imports from UI layers")
+                self.compliance['no_framework_deps'] = False
         
         print("  ✓ Core has no framework dependencies")
         return True

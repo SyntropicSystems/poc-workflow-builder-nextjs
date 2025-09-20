@@ -1,7 +1,7 @@
 # API Boundary Analysis Report
 
 ## Summary
-- API Functions: 8
+- API Functions: 9
 - Components Analyzed: 1
 - Violations Found: 1
 
@@ -13,12 +13,13 @@
 ## 📋 Recommendations
 
 - CRITICAL: Move all business logic to lib/workflow-core/api.ts
-- Missing expected API functions: saveWorkflow, loadWorkflow, validateWorkflow, createWorkflow
+- Missing expected API functions: validateWorkflow, saveWorkflow, loadWorkflow
 
 ## API Functions Found
 
 - `addEdge()`
 - `addStep()`
+- `createWorkflow()`
 - `createWorkflowFromTemplate()`
 - `duplicateStep()`
 - `removeEdge()`

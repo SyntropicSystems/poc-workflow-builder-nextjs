@@ -27,8 +27,8 @@ class TestCoverageAnalyzer:
         
         content = api_file.read_text()
         
-        # Find exported functions
-        functions = re.findall(r'export\s+function\s+(\w+)', content)
+        # Find exported functions (including async functions)
+        functions = re.findall(r'export\s+(?:async\s+)?function\s+(\w+)', content)
         self.api_functions = set(functions)
         
         print(f"  ✓ Found {len(self.api_functions)} API functions")
@@ -55,16 +55,30 @@ class TestCoverageAnalyzer:
         for test_file in self.test_files:
             content = test_file.read_text()
             
-            # Find imports from API
-            api_imports = re.findall(
+            # Find imports from API - check both relative and absolute imports
+            # Pattern 1: from './api' or from '../api' etc
+            api_imports_relative = re.findall(
+                r'import\s+{([^}]+)}\s+from\s+[\'"][\.\/]*api[\'"]',
+                content
+            )
+            
+            # Pattern 2: from 'workflow-core/api' or '@/lib/workflow-core/api'
+            api_imports_absolute = re.findall(
                 r'import\s+{([^}]+)}\s+from\s+[\'"].*workflow-core/api',
                 content
             )
             
             imported = []
-            if api_imports:
-                imported = [f.strip() for f in api_imports[0].split(',')]
-                self.tested_functions.update(imported)
+            if api_imports_relative:
+                for imports in api_imports_relative:
+                    imported.extend([f.strip() for f in imports.split(',')])
+            if api_imports_absolute:
+                for imports in api_imports_absolute:
+                    imported.extend([f.strip() for f in imports.split(',')])
+            
+            # Remove duplicates
+            imported = list(set(imported))
+            self.tested_functions.update(imported)
             
             # Count test cases
             describe_blocks = len(re.findall(r'describe\(', content))
