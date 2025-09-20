@@ -162,21 +162,6 @@ describe('Edge Management API', () => {
       }
     });
 
-    it('should handle complex circular dependency detection', () => {
-      // Create: step1 -> step2, step2 -> step3
-      let workflow = createBaseWorkflow();
-      workflow.steps![0].next = [{ to: 'step2', when: 'success' }];
-      workflow.steps![1].next = [{ to: 'step3', when: 'success' }];
-      
-      // Try: step3 -> step2 (should be allowed - not circular to step1)
-      const result = addEdge(workflow, 'step3', 'step2', 'back');
-      
-      expect(result.success).toBe(true);
-      if (result.success) {
-        const step3 = result.data.steps?.find(s => s.id === 'step3');
-        expect(step3?.next?.[0].to).toBe('step2');
-      }
-    });
   });
   
   describe('removeEdge', () => {

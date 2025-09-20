@@ -7,6 +7,7 @@ describe('Workflow Validator', () => {
       schema: 'flowspec.v1',
       id: 'test.flow.v1',
       title: 'Test Flow',
+      owner: 'test@example.com',  // Add missing required field
       policy: {
         enforcement: 'advice'
       },
@@ -32,7 +33,7 @@ describe('Workflow Validator', () => {
   it('should catch missing required fields', () => {
     const workflow = {
       schema: 'flowspec.v1',
-      // Missing id, title, policy, steps
+      // Missing id, title, owner, steps (policy is optional)
     };
 
     const errors = validateFlow(workflow);
@@ -40,7 +41,7 @@ describe('Workflow Validator', () => {
     
     expect(errorPaths).toContain('id');
     expect(errorPaths).toContain('title');
-    expect(errorPaths).toContain('policy');
+    expect(errorPaths).toContain('owner');
     expect(errorPaths).toContain('steps');
   });
 
