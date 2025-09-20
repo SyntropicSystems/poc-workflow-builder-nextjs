@@ -68,7 +68,7 @@ For this portfolio repo, we may commit directly to `main` for doc‑only work. F
 - Provide evidence (screenshots, diffs, outputs) where applicable.
 
 ## Security
-- See [SECURITY.md](./SECURITY.md) for reporting vulnerabilities.
+- See [SECURITY.md](./SECURITY.md) for reporting vulnerabilities and agentic AI best practices (prompt injection mitigations).
 
 ## License
 - By contributing, you agree that your contributions are licensed under the [MIT License](./LICENSE).
