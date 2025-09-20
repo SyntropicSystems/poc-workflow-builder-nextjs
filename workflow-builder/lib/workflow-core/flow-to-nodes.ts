@@ -1,21 +1,44 @@
-import type { Node, Edge } from 'reactflow';
 import type { Flow, Step } from './generated';
 
-export interface StepNodeData {
+// Plain data structures - no React dependencies
+export interface GraphNode {
+  id: string;
+  type: string;
+  position: {
+    x: number;
+    y: number;
+  };
+  data: GraphNodeData;
+}
+
+export interface GraphEdge {
+  id: string;
+  source: string;
+  target: string;
+  label?: string;
+  type: string;
+  animated: boolean;
+}
+
+export interface GraphNodeData {
   step: Step;
   hasToken: boolean;
   instructionCount: number;
   checkCount: number;
 }
 
-export function flowToReactFlow(workflow: Flow): { nodes: Node[]; edges: Edge[] } {
+/**
+ * Convert a Flow to plain graph data structures
+ * UI layer can convert these to React Flow components
+ */
+export function flowToGraphData(workflow: Flow): { nodes: GraphNode[]; edges: GraphEdge[] } {
   if (!workflow.steps || workflow.steps.length === 0) {
     return { nodes: [], edges: [] };
   }
 
-  const nodes: Node[] = [];
-  const edges: Edge[] = [];
-  const steps = workflow.steps; // Type assertion for safety
+  const nodes: GraphNode[] = [];
+  const edges: GraphEdge[] = [];
+  const steps = workflow.steps;
   
   // Calculate node positions (simple vertical layout)
   const nodeWidth = 250;
@@ -40,7 +63,7 @@ export function flowToReactFlow(workflow: Flow): { nodes: Node[]; edges: Edge[] 
         hasToken: !!step.token,
         instructionCount: step.instructions?.length || 0,
         checkCount: step.acceptance?.checks?.length || 0
-      } as StepNodeData
+      }
     });
   });
 
@@ -77,3 +100,13 @@ export function flowToReactFlow(workflow: Flow): { nodes: Node[]; edges: Edge[] 
 
   return { nodes, edges };
 }
+
+/**
+ * Legacy function name - redirect to new function
+ * @deprecated Use flowToGraphData instead
+ */
+export const flowToReactFlow = flowToGraphData;
+
+// Export type aliases for backward compatibility
+export type StepNodeData = GraphNodeData;
+export const convertFlowToNodes = flowToGraphData;

@@ -593,14 +593,115 @@ function wouldCreateCycle(
 }
 
 /**
+ * Create a new empty workflow
+ * @param id - Workflow ID (e.g., "domain.name.v1")
+ * @param title - Human-readable title
+ * @param owner - Owner email address
+ * @param policy - Optional policy configuration
+ * @returns Result containing new empty workflow
+ */
+export function createWorkflow(
+  id: string,
+  title: string,
+  owner: string,
+  policy?: Flow['policy']
+): Result<Flow> {
+  try {
+    // Validate inputs
+    if (!id || !title || !owner) {
+      return {
+        success: false,
+        error: new Error('Missing required fields: id, title, or owner')
+      };
+    }
+    
+    // Validate ID format
+    const idPattern = /^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)*\.v\d+$/;
+    if (!idPattern.test(id)) {
+      return {
+        success: false,
+        error: new Error('ID must match pattern: domain.name.v1')
+      };
+    }
+    
+    // Validate email
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(owner)) {
+      return {
+        success: false,
+        error: new Error('Owner must be a valid email address')
+      };
+    }
+    
+    const workflow: Flow = {
+      schema: 'flowspec.v1',
+      id,
+      title,
+      owner,
+      policy: policy || { enforcement: 'none' },
+      steps: []
+    };
+    
+    return {
+      success: true,
+      data: workflow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to create workflow')
+    };
+  }
+}
+
+/**
  * Create a new workflow from a minimal template
  * @param id - Workflow ID (e.g., "domain.name.v1")
  * @param title - Human-readable title
- * @returns New workflow with minimal valid structure
+ * @param owner - Owner email address
+ * @returns Result containing new workflow with minimal valid structure
  */
 export function createWorkflowFromTemplate(
   id: string,
-  title: string
-): Flow {
-  throw new Error('Not implemented: createWorkflowFromTemplate')
+  title: string,
+  owner: string
+): Result<Flow> {
+  try {
+    // Validate ID format
+    const idPattern = /^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)*\.v\d+$/;
+    if (!idPattern.test(id)) {
+      return {
+        success: false,
+        error: new Error('ID must match pattern: domain.name.v1')
+      };
+    }
+    
+    // Validate email format
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(owner)) {
+      return {
+        success: false,
+        error: new Error('Owner must be a valid email address')
+      };
+    }
+    
+    const workflow: Flow = {
+      schema: 'flowspec.v1',
+      id,
+      title,
+      owner,
+      policy: { enforcement: 'none' },
+      steps: []
+    };
+    
+    return {
+      success: true,
+      data: workflow
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error : new Error('Failed to create workflow from template')
+    };
+  }
 }

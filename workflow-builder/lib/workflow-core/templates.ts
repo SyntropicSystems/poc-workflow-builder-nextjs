@@ -1,8 +1,8 @@
-import type { Step } from './generated';
+import type { Step, Check, NextStep, Token } from './generated';
 
-// Note: Using 'any' type here to match the actual YAML structure
-// rather than the strict TypeScript schema definitions
-export const STEP_TEMPLATES: { [key: string]: any } = {
+// Template for creating new steps - uses Partial<Step> for flexibility
+// Note: Token scope fields are flexible in templates and may not match exact schema
+export const STEP_TEMPLATES: { [key: string]: Partial<Step> } = {
   human_review: {
     role: 'human',
     title: 'Human Review',
@@ -13,14 +13,14 @@ export const STEP_TEMPLATES: { [key: string]: any } = {
     ],
     acceptance: {
       checks: [
-        { description: 'Content has been reviewed completely' },
-        { description: 'Decision has been made and documented' },
-        { description: 'Feedback has been provided if needed' }
+        { description: 'Content has been reviewed completely' } as Check,
+        { description: 'Decision has been made and documented' } as Check,
+        { description: 'Feedback has been provided if needed' } as Check
       ]
     },
     next: [
-      { to: 'next_step', when: 'approved' },
-      { to: 'revision_step', when: 'rejected' }
+      { to: 'next_step', when: 'approved' } as NextStep,
+      { to: 'revision_step', when: 'rejected' } as NextStep
     ]
   },
   
@@ -34,19 +34,21 @@ export const STEP_TEMPLATES: { [key: string]: any } = {
     ],
     acceptance: {
       checks: [
-        { description: 'Analysis is complete and thorough' },
-        { description: 'Insights are documented clearly' },
-        { description: 'Recommendations are actionable' }
+        { description: 'Analysis is complete and thorough' } as Check,
+        { description: 'Insights are documented clearly' } as Check,
+        { description: 'Recommendations are actionable' } as Check
       ]
     },
     token: {
       scope: {
-        repositories: 'write',
-        issues: 'write'
+        // Example permissions for AI role
+        fsRead: ['./input'],
+        fsWrite: ['./output'],
+        net: 'restricted'
       }
-    },
+    } as Token,
     next: [
-      { to: 'next_step', when: 'analysis_complete' }
+      { to: 'next_step', when: 'analysis_complete' } as NextStep
     ]
   },
   
@@ -60,20 +62,22 @@ export const STEP_TEMPLATES: { [key: string]: any } = {
     ],
     acceptance: {
       checks: [
-        { description: 'All system checks passed' },
-        { description: 'Prerequisites are met' },
-        { description: 'Dependencies are available' }
+        { description: 'All system checks passed' } as Check,
+        { description: 'Prerequisites are met' } as Check,
+        { description: 'Dependencies are available' } as Check
       ]
     },
     token: {
       scope: {
-        deployments: 'write',
-        environments: 'staging'
+        // Example permissions for system role
+        exec: ['validate.sh', 'check.sh'],
+        fsRead: ['./config'],
+        net: 'full'
       }
-    },
+    } as Token,
     next: [
-      { to: 'next_step', when: 'checks_passed' },
-      { to: 'error_handler', when: 'checks_failed' }
+      { to: 'next_step', when: 'checks_passed' } as NextStep,
+      { to: 'error_handler', when: 'checks_failed' } as NextStep
     ]
   },
   
@@ -85,7 +89,7 @@ export const STEP_TEMPLATES: { [key: string]: any } = {
     ],
     acceptance: {
       checks: [
-        { description: 'Add your acceptance criteria here' }
+        { description: 'Add your acceptance criteria here' } as Check
       ]
     }
   }

@@ -13,7 +13,7 @@ import ReactFlow, {
   ConnectionMode
 } from 'reactflow';
 import { StepNode } from './step-node';
-import { flowToReactFlow } from '@/lib/workflow-core/flow-to-nodes';
+import { flowToReactFlow } from './flow-converter';
 import { useWorkflowStore } from '@/lib/state/workflow.store';
 import type { Flow } from '@/lib/workflow-core';
 

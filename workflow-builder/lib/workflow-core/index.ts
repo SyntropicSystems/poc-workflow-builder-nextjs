@@ -3,10 +3,15 @@ export {
   loadWorkflow,
   saveWorkflow,
   validateWorkflow,
+  createWorkflow,
+  createWorkflowFromTemplate,
   updateStep,
   addStep,
   removeStep,
-  createWorkflowFromTemplate
+  duplicateStep,
+  addEdge,
+  removeEdge,
+  updateEdge
 } from './api'
 
 // Re-export types
