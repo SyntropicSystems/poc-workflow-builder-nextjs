@@ -8,13 +8,16 @@ describe('saveWorkflow', () => {
     schema: 'flowspec.v1',
     id: 'test.workflow.v1',
     title: 'Test Workflow',
+    owner: 'test@example.com',
     steps: [
       {
         id: 'step1',
         title: 'First Step',
         role: 'human',
         instructions: ['Do something'],
-        acceptance: { checks: [] }
+        acceptance: { 
+          checks: [{ kind: 'manual', expr: 'completed' }]
+        }
       }
     ]
   };

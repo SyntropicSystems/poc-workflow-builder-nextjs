@@ -429,10 +429,17 @@ export function updateEdge(
   try {
     const sourceStep = workflow.steps?.find(s => s.id === sourceStepId);
     
-    if (!sourceStep || !sourceStep.next) {
+    if (!sourceStep) {
       return {
         success: false,
-        error: new Error(`Source step "${sourceStepId}" not found or has no edges`)
+        error: new Error(`Source step "${sourceStepId}" not found`)
+      };
+    }
+    
+    if (!sourceStep.next || sourceStep.next.length === 0) {
+      return {
+        success: false,
+        error: new Error(`Source step "${sourceStepId}" has no edges`)
       };
     }
     
@@ -514,10 +521,17 @@ export function removeEdge(
   try {
     const sourceStep = workflow.steps?.find(s => s.id === sourceStepId);
     
-    if (!sourceStep || !sourceStep.next) {
+    if (!sourceStep) {
       return {
         success: false,
-        error: new Error(`Source step "${sourceStepId}" not found or has no edges`)
+        error: new Error(`Source step "${sourceStepId}" not found`)
+      };
+    }
+    
+    if (!sourceStep.next || sourceStep.next.length === 0) {
+      return {
+        success: false,
+        error: new Error(`Source step "${sourceStepId}" has no edges`)
       };
     }
     

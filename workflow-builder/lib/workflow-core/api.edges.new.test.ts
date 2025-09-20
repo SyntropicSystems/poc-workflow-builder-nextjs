@@ -148,6 +148,7 @@ describe('Edge Management API', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         const step1 = result.data.steps?.find(s => s.id === 'step1');
+        expect(step1?.next).toHaveLength(1);
         expect(step1?.next?.[0].to).toBe('step1');
         expect(step1?.next?.[0].when).toBe('retry');
       }
