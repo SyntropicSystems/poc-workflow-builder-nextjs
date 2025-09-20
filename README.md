@@ -58,5 +58,7 @@ python3 scripts/generate-all-reports.py
 - Keep core framework‑free and uphold API boundary discipline. Use immutable updates to enable undo/redo.
 
 ## Contributing & License
-- Contribution guidelines and license files may be added as part of repository hygiene tasks.
-- For now, see the project planning tasks under docs/project/ for active and staged improvements.
+- Contributing guide: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Security policy: [SECURITY.md](./SECURITY.md)
+- License: [LICENSE](./LICENSE)
+- Project planning tasks: [docs/project/](./docs/project/)
