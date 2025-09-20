@@ -13,7 +13,7 @@
 ## 📋 Recommendations
 
 - CRITICAL: Move all business logic to lib/workflow-core/api.ts
-- Missing expected API functions: loadWorkflow, validateWorkflow, saveWorkflow
+- Missing expected API functions: saveWorkflow, validateWorkflow, loadWorkflow
 
 ## API Functions Found
 
