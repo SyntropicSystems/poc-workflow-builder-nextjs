@@ -31,7 +31,17 @@ Each task document should contain:
 - Notes (optional) — risks, alternatives, follow‑ups
 
 Template:
-- A canonical template will be available at: `docs/project/_TEMPLATE.task.md` (see staged Task 46)
+- Use the canonical template: [./_TEMPLATE.task.md](./_TEMPLATE.task.md)
+
+## Authoring Guidelines
+- Keep tasks atomic: one coherent change set per task/commit.
+- Enumerate Files with explicit Create/Update/Delete operations.
+- Be precise in “Per-file Changes (exact)” and include link updates or structural moves.
+- Define Acceptance Criteria that are externally verifiable (links resolve, tests pass, lint clean).
+- Prefer concise steps; link to deeper docs (architecture, reports) rather than duplicating content.
+- Use relative links and validate them locally.
+- When code changes affect docs or tests, update them in the same task or create follow-ups.
+- Provide evidence (screenshots, diffs, CLI outputs) in the task or a colocated subfolder.
 
 ## Subfolders
 - Inbox: [./inbox/README.md](./inbox/README.md) — Raw ideas to groom into atomic tasks
