@@ -4,7 +4,18 @@
 
 This directory contains all analysis reports for the workflow-builder project. All reports are generated programmatically via scripts to ensure consistency and deterministic output.
 
+## Related Documentation
+- Architecture Overview: ../../docs/architecture/OVERVIEW.md
+- Docs Index: ../../docs/README.md
+- Project Planning: ../../docs/project/README.md
+
 ## Report Generation
+
+### Environment Prerequisites
+- Node.js 18+ (project runtime)
+- Python 3 (report generation)
+- pnpm (preferred package manager)
+- Optional: protoc (only if you intend to regenerate protobufs locally)
 
 ### Master Script
 
@@ -136,6 +147,13 @@ For the project to be considered ready for Phase 4:
 3. Output to `reports/` with `.json` and `.md` formats
 4. Update `generate-all-reports.py` to include new script
 5. Document in this README
+
+### Maintainers’ Notes
+- Script location: `workflow-builder/scripts/`
+- Naming conventions: `check-*.py`, `analyze-*.py`, `generate-*.py`
+- After adding or modifying scripts, also update:
+  - This README (tables/sections)
+  - The master script `scripts/generate-all-reports.py` to include/exclude steps as needed
 
 ### Report Validation
 
