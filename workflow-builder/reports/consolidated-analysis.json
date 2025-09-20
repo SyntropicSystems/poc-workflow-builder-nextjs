@@ -1,13 +1,13 @@
 {
-  "timestamp": "2025-09-19T19:45:30.017210",
+  "timestamp": "2025-09-19T20:19:11.671471",
   "readiness_scores": {
     "scores": {
       "api_boundary": 90,
       "architecture": 100,
       "rust_readiness": 80.0,
-      "test_coverage": 100.0
+      "test_coverage": 0
     },
-    "overall": 92.5
+    "overall": 67.5
   },
   "critical_issues": [
     {
@@ -44,7 +44,12 @@
         "estimated_hours": 3
       }
     ],
-    "before_phase_4": [],
+    "before_phase_4": [
+      {
+        "title": "Improve test coverage",
+        "description": "Increase from 0.0% to at least 80%"
+      }
+    ],
     "before_rust_migration": []
   },
   "summary": {

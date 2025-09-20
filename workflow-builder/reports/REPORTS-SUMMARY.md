@@ -1,7 +1,7 @@
 # Analysis Reports Summary
 
-**Generated**: 2025-09-19T19:44:58.984737
-**Git Commit**: 99b18859
+**Generated**: 2025-09-19T20:18:40.701167
+**Git Commit**: b5e3e4a8
 
 ## 📊 Reports Generated
 
@@ -9,7 +9,7 @@
 - ⚠️ [API Boundary Analysis](./api-boundary-analysis.md)
 - ✅ [Architecture Compliance](./architecture-compliance.md)
 - ✅ [Rust Readiness](./rust-readiness.md)
-- ✅ [Test Coverage](./test-coverage-audit.md)
+- ❌ Test Coverage (not generated)
 
 ## ⚠️ Issues Encountered
 
