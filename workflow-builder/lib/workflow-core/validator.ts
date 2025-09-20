@@ -54,13 +54,26 @@ export function validateFlow(data: unknown): ValidationError[] {
     });
   }
 
-  if (!flow.policy) {
+  if (!flow.owner) {
     errors.push({
-      path: 'policy',
-      message: 'Field "policy" is required',
+      path: 'owner',
+      message: 'Field "owner" is required',
       severity: 'error'
     });
-  } else {
+  } else if (typeof flow.owner === 'string') {
+    // Validate email format if owner is present
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(flow.owner as string)) {
+      errors.push({
+        path: 'owner',
+        message: 'Owner must be a valid email address',
+        severity: 'error'
+      });
+    }
+  }
+
+  // Policy is optional but validate if present
+  if (flow.policy) {
     validatePolicy(flow.policy, errors);
   }
 
@@ -80,7 +93,7 @@ export function validateFlow(data: unknown): ValidationError[] {
     errors.push({
       path: 'steps',
       message: 'At least one step is required',
-      severity: 'error'
+      severity: 'warning'
     });
   } else {
     validateSteps(flow.steps as unknown[], errors);

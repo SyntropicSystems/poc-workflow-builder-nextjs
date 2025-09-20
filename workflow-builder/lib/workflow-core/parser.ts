@@ -20,6 +20,7 @@ export function isValidFlowObject(obj: unknown): obj is Record<string, unknown> 
     'schema' in obj &&
     'id' in obj &&
     'title' in obj &&
+    'owner' in obj &&
     'steps' in obj
   );
 }

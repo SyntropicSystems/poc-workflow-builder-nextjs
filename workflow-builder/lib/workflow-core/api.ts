@@ -228,7 +228,7 @@ export function removeStep(
   stepId: string
 ): Result<Flow> {
   try {
-    if (!workflow.steps) {
+    if (!workflow.steps || workflow.steps.length === 0) {
       return {
         success: false,
         error: new Error('Workflow has no steps')
@@ -562,6 +562,11 @@ function wouldCreateCycle(
   sourceId: string,
   targetId: string
 ): boolean {
+  // Allow self-referencing edges
+  if (sourceId === targetId) {
+    return false;
+  }
+  
   // Simple DFS to check if targetId can reach sourceId
   const visited = new Set<string>();
   const stack = [targetId];
