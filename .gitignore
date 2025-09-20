@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Windows (optional)
+Thumbs.db
+ehthumbs.db
+
+# Editors (optional)
+.idea/
+.vscode/
