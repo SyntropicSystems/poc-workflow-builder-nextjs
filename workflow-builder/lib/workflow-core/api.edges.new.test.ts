@@ -7,7 +7,8 @@ import {
 import type { Flow } from './generated';
 
 describe('Edge Management API', () => {
-  const baseWorkflow: Flow = {
+  // Function to create fresh test data for each test
+  const createBaseWorkflow = (): Flow => ({
     schema: 'flowspec.v1',
     id: 'test.v1',
     title: 'Test',
@@ -38,10 +39,11 @@ describe('Edge Management API', () => {
         }
       }
     ]
-  };
+  });
   
   describe('addEdge', () => {
     it('should add edge successfully', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = addEdge(baseWorkflow, 'step1', 'step2', 'success');
       
       expect(result.success).toBe(true);
@@ -54,6 +56,7 @@ describe('Edge Management API', () => {
     });
     
     it('should add edge to step without existing next array', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = addEdge(baseWorkflow, 'step2', 'step3', 'completed');
       
       expect(result.success).toBe(true);
@@ -66,7 +69,7 @@ describe('Edge Management API', () => {
     });
 
     it('should add multiple edges to same step', () => {
-      let workflow = baseWorkflow;
+      let workflow = createBaseWorkflow();
       
       // Add first edge
       const result1 = addEdge(workflow, 'step1', 'step2', 'success');
@@ -89,6 +92,7 @@ describe('Edge Management API', () => {
     });
     
     it('should validate condition format', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = addEdge(baseWorkflow, 'step1', 'step2', 'Invalid-Condition');
       
       expect(result.success).toBe(false);
@@ -98,6 +102,7 @@ describe('Edge Management API', () => {
     });
     
     it('should prevent duplicate conditions', () => {
+      const baseWorkflow = createBaseWorkflow();
       const workflowWithEdge = { ...baseWorkflow };
       workflowWithEdge.steps![0].next = [{ to: 'step2', when: 'success' }];
       
@@ -110,6 +115,7 @@ describe('Edge Management API', () => {
     });
     
     it('should validate source step exists', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = addEdge(baseWorkflow, 'non_existent', 'step2', 'success');
       
       expect(result.success).toBe(false);
@@ -119,6 +125,7 @@ describe('Edge Management API', () => {
     });
 
     it('should validate target step exists', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = addEdge(baseWorkflow, 'step1', 'non_existent', 'success');
       
       expect(result.success).toBe(false);
@@ -129,7 +136,7 @@ describe('Edge Management API', () => {
     
     it('should detect circular dependencies', () => {
       // Create a chain: step1 -> step2 -> step3
-      let workflow = { ...baseWorkflow };
+      let workflow = createBaseWorkflow();
       workflow.steps![0].next = [{ to: 'step2', when: 'success' }];
       workflow.steps![1].next = [{ to: 'step3', when: 'success' }];
       
@@ -143,6 +150,7 @@ describe('Edge Management API', () => {
     });
 
     it('should allow self-referencing edges', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = addEdge(baseWorkflow, 'step1', 'step1', 'retry');
       
       expect(result.success).toBe(true);
@@ -156,7 +164,7 @@ describe('Edge Management API', () => {
 
     it('should handle complex circular dependency detection', () => {
       // Create: step1 -> step2, step2 -> step3
-      let workflow = { ...baseWorkflow };
+      let workflow = createBaseWorkflow();
       workflow.steps![0].next = [{ to: 'step2', when: 'success' }];
       workflow.steps![1].next = [{ to: 'step3', when: 'success' }];
       
@@ -172,21 +180,22 @@ describe('Edge Management API', () => {
   });
   
   describe('removeEdge', () => {
-    const workflowWithEdges: Flow = {
-      ...baseWorkflow,
-      steps: [
-        {
-          ...baseWorkflow.steps![0],
-          next: [
-            { to: 'step2', when: 'success' },
-            { to: 'step3', when: 'failure' }
-          ]
-        },
-        ...baseWorkflow.steps!.slice(1)
-      ]
-    };
-
     it('should remove edge successfully', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = removeEdge(workflowWithEdges, 'step1', 0);
       
       expect(result.success).toBe(true);
@@ -199,6 +208,7 @@ describe('Edge Management API', () => {
     });
     
     it('should remove next array if no edges remain', () => {
+      const baseWorkflow = createBaseWorkflow();
       const workflowWithOneEdge: Flow = {
         ...baseWorkflow,
         steps: [
@@ -220,6 +230,7 @@ describe('Edge Management API', () => {
     });
 
     it('should handle step without edges', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = removeEdge(baseWorkflow, 'step1', 0);
       
       expect(result.success).toBe(false);
@@ -229,6 +240,7 @@ describe('Edge Management API', () => {
     });
 
     it('should handle non-existent step', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = removeEdge(baseWorkflow, 'non_existent', 0);
       
       expect(result.success).toBe(false);
@@ -238,6 +250,21 @@ describe('Edge Management API', () => {
     });
 
     it('should handle edge index out of bounds', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = removeEdge(workflowWithEdges, 'step1', 5);
       
       expect(result.success).toBe(false);
@@ -247,6 +274,21 @@ describe('Edge Management API', () => {
     });
 
     it('should handle negative edge index', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = removeEdge(workflowWithEdges, 'step1', -1);
       
       expect(result.success).toBe(false);
@@ -256,6 +298,21 @@ describe('Edge Management API', () => {
     });
 
     it('should remove correct edge by index', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = removeEdge(workflowWithEdges, 'step1', 1); // Remove 'failure' edge
       
       expect(result.success).toBe(true);
@@ -269,21 +326,22 @@ describe('Edge Management API', () => {
   });
   
   describe('updateEdge', () => {
-    const workflowWithEdges: Flow = {
-      ...baseWorkflow,
-      steps: [
-        {
-          ...baseWorkflow.steps![0],
-          next: [
-            { to: 'step2', when: 'success' },
-            { to: 'step3', when: 'failure' }
-          ]
-        },
-        ...baseWorkflow.steps!.slice(1)
-      ]
-    };
-
     it('should update edge condition', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 0, 'approved');
       
       expect(result.success).toBe(true);
@@ -298,6 +356,21 @@ describe('Edge Management API', () => {
     });
     
     it('should update edge target', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 0, 'success', 'step3');
       
       expect(result.success).toBe(true);
@@ -309,6 +382,21 @@ describe('Edge Management API', () => {
     });
 
     it('should update both condition and target', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 1, 'rejected', 'step2');
       
       expect(result.success).toBe(true);
@@ -320,6 +408,21 @@ describe('Edge Management API', () => {
     });
 
     it('should handle non-existent step', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'non_existent', 0, 'new_condition');
       
       expect(result.success).toBe(false);
@@ -329,6 +432,7 @@ describe('Edge Management API', () => {
     });
 
     it('should handle step without edges', () => {
+      const baseWorkflow = createBaseWorkflow();
       const result = updateEdge(baseWorkflow, 'step1', 0, 'new_condition');
       
       expect(result.success).toBe(false);
@@ -338,6 +442,21 @@ describe('Edge Management API', () => {
     });
 
     it('should handle edge index out of bounds', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 5, 'new_condition');
       
       expect(result.success).toBe(false);
@@ -347,6 +466,21 @@ describe('Edge Management API', () => {
     });
 
     it('should validate new condition format', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 0, 'Invalid-Condition');
       
       expect(result.success).toBe(false);
@@ -356,6 +490,21 @@ describe('Edge Management API', () => {
     });
 
     it('should prevent condition conflicts', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 0, 'failure'); // Already exists at index 1
       
       expect(result.success).toBe(false);
@@ -365,6 +514,21 @@ describe('Edge Management API', () => {
     });
 
     it('should validate new target step exists', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 0, 'success', 'non_existent');
       
       expect(result.success).toBe(false);
@@ -375,7 +539,7 @@ describe('Edge Management API', () => {
 
     it('should detect circular dependencies with new target', () => {
       // Create a longer chain: step1 -> step2 -> step3
-      let workflow = { ...baseWorkflow };
+      let workflow = createBaseWorkflow();
       workflow.steps![0].next = [{ to: 'step2', when: 'success' }];
       workflow.steps![1].next = [{ to: 'step3', when: 'success' }];
       
@@ -391,6 +555,21 @@ describe('Edge Management API', () => {
     });
 
     it('should allow same condition if not changing it', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 0, 'success', 'step3');
       
       expect(result.success).toBe(true);
@@ -402,6 +581,21 @@ describe('Edge Management API', () => {
     });
 
     it('should handle updating to same target', () => {
+      const baseWorkflow = createBaseWorkflow();
+      const workflowWithEdges: Flow = {
+        ...baseWorkflow,
+        steps: [
+          {
+            ...baseWorkflow.steps![0],
+            next: [
+              { to: 'step2', when: 'success' },
+              { to: 'step3', when: 'failure' }
+            ]
+          },
+          ...baseWorkflow.steps!.slice(1)
+        ]
+      };
+      
       const result = updateEdge(workflowWithEdges, 'step1', 0, 'completed', 'step2');
       
       expect(result.success).toBe(true);

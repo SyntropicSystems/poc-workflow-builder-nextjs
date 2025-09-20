@@ -35,14 +35,14 @@ describe('Core API Shape', () => {
   
   it('should export createWorkflowFromTemplate function', () => {
     expect(typeof api.createWorkflowFromTemplate).toBe('function')
-    expect(api.createWorkflowFromTemplate.length).toBe(2) // id + title
+    expect(api.createWorkflowFromTemplate.length).toBe(3) // id + title + owner
   })
   
-  it('should throw not implemented errors for edit functions', () => {
-    // Only test the functions still not implemented
-    expect(() => api.updateStep({} as Flow, 'id', {})).toThrow('Not implemented')
-    expect(() => api.addStep({} as Flow, {} as Step)).toThrow('Not implemented')
-    expect(() => api.removeStep({} as Flow, 'id')).toThrow('Not implemented')
-    expect(() => api.createWorkflowFromTemplate('id', 'title')).toThrow('Not implemented')
+  it('should have all functions implemented', () => {
+    // All functions are now implemented, no longer throwing "not implemented" errors
+    expect(typeof api.updateStep).toBe('function')
+    expect(typeof api.addStep).toBe('function')
+    expect(typeof api.removeStep).toBe('function')
+    expect(typeof api.createWorkflowFromTemplate).toBe('function')
   })
 })
