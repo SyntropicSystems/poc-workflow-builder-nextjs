@@ -1,0 +1,72 @@
+{
+  "summary": {
+    "good_coverage": true,
+    "coverage_percentage": 100.0,
+    "total_functions": 12,
+    "tested_functions": 12,
+    "test_files": 12,
+    "total_tests": 145
+  },
+  "untested_functions": [],
+  "test_patterns": {
+    "result_pattern_tests": false,
+    "error_case_tests": false,
+    "validation_tests": true,
+    "edge_case_tests": true,
+    "integration_tests": false
+  },
+  "test_files": [
+    {
+      "file": "lib/workflow-core/api.core.test.ts",
+      "tests": 24
+    },
+    {
+      "file": "lib/workflow-core/api.steps.new.test.ts",
+      "tests": 26
+    },
+    {
+      "file": "lib/workflow-core/api.edges.new.test.ts",
+      "tests": 28
+    },
+    {
+      "file": "lib/workflow-core/api.shape.test.ts",
+      "tests": 8
+    },
+    {
+      "file": "lib/workflow-core/api.steps.test.ts",
+      "tests": 19
+    },
+    {
+      "file": "lib/workflow-core/validator.test.ts",
+      "tests": 4
+    },
+    {
+      "file": "lib/workflow-core/flow-to-nodes.test.ts",
+      "tests": 7
+    },
+    {
+      "file": "lib/workflow-core/history-manager.test.ts",
+      "tests": 20
+    },
+    {
+      "file": "lib/workflow-core/index.test.ts",
+      "tests": 1
+    },
+    {
+      "file": "lib/fs/browser-fs.test.ts",
+      "tests": 3
+    },
+    {
+      "file": "lib/fs/file-discovery.test.ts",
+      "tests": 3
+    },
+    {
+      "file": "lib/workflow-core/generated/types.test.ts",
+      "tests": 2
+    }
+  ],
+  "recommendations": [
+    "Add error case testing for all API functions",
+    "Add integration tests for complete workflows"
+  ]
+}

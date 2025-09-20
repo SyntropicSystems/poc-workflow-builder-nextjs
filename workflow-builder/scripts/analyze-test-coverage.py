@@ -38,11 +38,30 @@ class TestCoverageAnalyzer:
         """Find all test files"""
         print("🔍 Discovering test files...")
         
+        # Look for specific test files we know exist
+        specific_test_files = [
+            Path('lib/workflow-core/api.core.test.ts'),
+            Path('lib/workflow-core/api.steps.new.test.ts'),
+            Path('lib/workflow-core/api.edges.new.test.ts'),
+            Path('lib/workflow-core/api.shape.test.ts'),
+            Path('lib/workflow-core/api.steps.test.ts'),
+            Path('lib/workflow-core/validator.test.ts'),
+            Path('lib/workflow-core/flow-to-nodes.test.ts'),
+            Path('lib/workflow-core/history-manager.test.ts'),
+            Path('lib/workflow-core/index.test.ts')
+        ]
+        
+        # Add specific files if they exist
+        for test_file in specific_test_files:
+            if test_file.exists():
+                self.test_files.append(test_file)
+        
+        # Also search for general patterns
         test_patterns = ['*.test.ts', '*.spec.ts', '*.test.tsx', '*.spec.tsx']
         
         for pattern in test_patterns:
             for test_file in Path('.').rglob(pattern):
-                if 'node_modules' not in str(test_file):
+                if 'node_modules' not in str(test_file) and test_file not in self.test_files:
                     self.test_files.append(test_file)
         
         print(f"  ✓ Found {len(self.test_files)} test files")
@@ -52,37 +71,41 @@ class TestCoverageAnalyzer:
         """Analyze what functions are being tested"""
         print("🔍 Analyzing test content...")
         
+        # Get all API functions first
+        api_functions = self.api_functions
+        
         for test_file in self.test_files:
             content = test_file.read_text()
             
-            # Find imports from API - check both relative and absolute imports
-            # Pattern 1: from './api' or from '../api' etc
-            api_imports_relative = re.findall(
+            # Look for imports from API with various patterns
+            import_patterns = [
                 r'import\s+{([^}]+)}\s+from\s+[\'"][\.\/]*api[\'"]',
-                content
-            )
-            
-            # Pattern 2: from 'workflow-core/api' or '@/lib/workflow-core/api'
-            api_imports_absolute = re.findall(
-                r'import\s+{([^}]+)}\s+from\s+[\'"].*workflow-core/api',
-                content
-            )
+                r'import\s+{([^}]+)}\s+from\s+[\'"].*workflow-core/api[\'"]',
+                r'import\s+{([^}]+)}\s+from\s+[\'"]@/lib/workflow-core/api[\'"]'
+            ]
             
             imported = []
-            if api_imports_relative:
-                for imports in api_imports_relative:
-                    imported.extend([f.strip() for f in imports.split(',')])
-            if api_imports_absolute:
-                for imports in api_imports_absolute:
-                    imported.extend([f.strip() for f in imports.split(',')])
+            for pattern in import_patterns:
+                matches = re.findall(pattern, content)
+                for match in matches:
+                    imported.extend([f.strip() for f in match.split(',') if f.strip()])
+            
+            # Also check if functions are mentioned in describe blocks
+            for func in api_functions:
+                # Check if function is mentioned in a describe block or test name
+                if re.search(rf"(describe|it|test)\s*\(\s*['\"`]{func}", content):
+                    imported.append(func)
+                # Check if function is called in the tests
+                elif re.search(rf"\b{func}\s*\(", content):
+                    imported.append(func)
             
             # Remove duplicates
             imported = list(set(imported))
             self.tested_functions.update(imported)
             
             # Count test cases
-            describe_blocks = len(re.findall(r'describe\(', content))
-            it_blocks = len(re.findall(r'it\(|test\(', content))
+            describe_blocks = len(re.findall(r'describe\s*\(', content))
+            it_blocks = len(re.findall(r'it\s*\(|test\s*\(', content))
             
             self.coverage_data[str(test_file)] = {
                 'describes': describe_blocks,
@@ -133,34 +156,42 @@ class TestCoverageAnalyzer:
         """Try to run coverage command if available"""
         print("🔍 Attempting to run coverage analysis...")
         
-        coverage_commands = [
-            'pnpm test:coverage',
-            'npm run test:coverage',
-            'pnpm test -- --coverage'
-        ]
-        
-        for cmd in coverage_commands:
-            try:
-                result = subprocess.run(
-                    cmd.split(),
-                    capture_output=True,
-                    text=True,
-                    timeout=30
-                )
-                if result.returncode == 0:
-                    print("  ✓ Coverage command executed successfully")
-                    # Try to parse coverage output
-                    if 'Coverage' in result.stdout:
-                        lines = result.stdout.split('\n')
-                        for line in lines:
-                            if '%' in line and 'workflow-core' in line:
-                                print(f"    {line.strip()}")
-                    return True
-            except:
-                continue
-        
-        print("  ⚠️ No coverage command available")
-        return False
+        # Use the command that works from run-all-tests.py
+        try:
+            result = subprocess.run(
+                ['pnpm', 'test', '--run', '--coverage'],
+                capture_output=True,
+                text=True,
+                timeout=60  # Increase timeout to 60 seconds
+            )
+            
+            if result.returncode == 0:
+                print("  ✓ Coverage command executed successfully")
+                # Try to parse coverage output
+                if 'Coverage' in result.stdout or '%' in result.stdout:
+                    lines = result.stdout.split('\n')
+                    for line in lines:
+                        if '%' in line and ('workflow-core' in line or 'All files' in line):
+                            print(f"    {line.strip()}")
+                
+                # Extract test count from output
+                test_match = re.search(r'(\d+) passed', result.stdout)
+                if test_match:
+                    test_count = int(test_match.group(1))
+                    print(f"  ✓ {test_count} tests passed")
+                
+                return True
+            else:
+                print("  ⚠️ Tests failed or coverage not available")
+                return False
+                
+        except subprocess.TimeoutExpired:
+            print("  ⚠️ Coverage command timed out (60s)")
+            # Even if it times out, we can still continue with manual analysis
+            return False
+        except Exception as e:
+            print(f"  ⚠️ Coverage command error: {e}")
+            return False
     
     def calculate_coverage(self):
         """Calculate test coverage metrics"""

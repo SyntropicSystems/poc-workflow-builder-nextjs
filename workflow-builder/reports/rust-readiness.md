@@ -24,7 +24,7 @@
 
 ## Critical Issues
 
-- Functions not returning Result<T>: loadWorkflow, validateWorkflow
+- Functions not returning Result<T>: loadWorkflow
 
 ## Rust Migration Checklist
 

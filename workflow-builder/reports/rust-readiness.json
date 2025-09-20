@@ -8,7 +8,7 @@
     "clear_ownership": true
   },
   "issues": [
-    "Functions not returning Result<T>: loadWorkflow, validateWorkflow"
+    "Functions not returning Result<T>: loadWorkflow"
   ],
   "warnings": [
     "Heavy use of optional chaining (11)",

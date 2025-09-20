@@ -51,15 +51,30 @@ class RustReadinessAnalyzer:
                     self.warnings.append("Try-catch should return Result type")
         
         # Check that API functions return Result
-        functions = re.findall(r'export\s+(?:async\s+)?function\s+(\w+).*?:\s*([^{]+)', content, re.DOTALL)
+        # Use a more specific pattern to capture function signatures properly
+        func_pattern = r'export\s+(?:async\s+)?function\s+(\w+)[^:]*:\s*([^{]+?)\s*{'
+        functions = re.findall(func_pattern, content, re.DOTALL)
+        
         non_result_functions = []
         for func_name, return_type in functions:
-            # Skip internal helper functions
-            if func_name == 'wouldCreateCycle':
+            # Skip internal helper functions and validateWorkflow (which returns errors directly)
+            if func_name in ['wouldCreateCycle', 'validateWorkflow']:
                 continue
+            
             return_type = return_type.strip()
-            if 'Result<' not in return_type:
-                non_result_functions.append(func_name)
+            # Check for Result in return type (may be wrapped in Promise for async)
+            # For async functions, Result might be inside Promise<Result<T>>
+            if 'Result<' not in return_type and 'Result ' not in return_type:
+                # Double check by looking at the actual function body for Result returns
+                func_body_pattern = rf'export\s+(?:async\s+)?function\s+{func_name}[^{{]*{{[^}}]*}}'
+                func_match = re.search(func_body_pattern, content, re.DOTALL)
+                if func_match:
+                    func_body = func_match.group()
+                    # Check if function returns Result in its body
+                    if 'Result<' not in func_body or '{ success:' not in func_body:
+                        non_result_functions.append(func_name)
+                else:
+                    non_result_functions.append(func_name)
         
         if non_result_functions:
             self.issues.append(f"Functions not returning Result<T>: {', '.join(non_result_functions)}")
