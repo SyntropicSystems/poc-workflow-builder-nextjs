@@ -70,5 +70,32 @@ For this portfolio repo, we may commit directly to `main` for doc‑only work. F
 ## Security
 - See [SECURITY.md](./SECURITY.md) for reporting vulnerabilities and agentic AI best practices (prompt injection mitigations).
 
+## Repository Hygiene (before publishing/PR)
+Run the local hygiene scanner to ensure no secrets or sensitive files are present before opening PRs or making the repo public.
+
+Usage:
+- python3 scripts/verify-repo-hygiene.py
+- python3 scripts/verify-repo-hygiene.py --ci
+- python3 scripts/verify-repo-hygiene.py --json
+- python3 scripts/verify-repo-hygiene.py --exclude "docs/**,**/*.png"
+
+What it checks:
+- Content regex scans for common secret/token patterns:
+  - Private keys/certs, AWS keys, GitHub tokens, JWT-like strings, Slack tokens
+  - Generic “apiKey/secret/token/password” assignments with string literals
+- Sensitive filenames (.env, .env.*, *.pem, *.key, *.p12, id_rsa/id_ecdsa/id_ed25519)
+- Advisory: .gitignore completeness for public release
+
+Behavior:
+- Read-only; prints a report. Exits non-zero if findings are detected (useful for CI).
+
+Optional full history scans (advanced):
+- gitleaks (example): gitleaks detect --source . --no-git
+- trufflehog (example): trufflehog git file://. --since-commit <first-commit-sha>
+
+Best practices:
+- Never commit .env or key/cert files.
+- Avoid pasting secrets into issues/PRs.
+
 ## License
 - By contributing, you agree that your contributions are licensed under the [MIT License](./LICENSE).
